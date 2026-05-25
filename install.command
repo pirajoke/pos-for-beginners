@@ -3,9 +3,15 @@ set -e
 
 cd "$(dirname "$0")"
 
-echo "POS FOR BEGINNERS installer"
 echo ""
-echo "Drag the target Obsidian vault folder here, then press Enter:"
+echo "╔══════════════════════════════════════════════════╗"
+echo "║       POS FOR BEGINNERS — Setup Wizard          ║"
+echo "║                                                  ║"
+echo "║  8 steps from zero to a working system.          ║"
+echo "║  Each step builds on the previous one.           ║"
+echo "╚══════════════════════════════════════════════════╝"
+echo ""
+echo "Drag your Obsidian vault folder here, then press Enter:"
 read VAULT_PATH
 
 if [ -z "$VAULT_PATH" ]; then
@@ -13,17 +19,8 @@ if [ -z "$VAULT_PATH" ]; then
   exit 1
 fi
 
-echo ""
-echo "Optional: drag a folder containing approved Notion/Mail/Granola/Crisp source exports, or press Enter to skip:"
-read SOURCE_PATH
-
-ARGS=(scripts/bootstrap_client.py --vault "$VAULT_PATH")
-
-if [ -n "$SOURCE_PATH" ]; then
-  ARGS+=(--scan-path "$SOURCE_PATH")
-fi
-
-python3 "${ARGS[@]}"
+# Remove potential quotes from drag-and-drop
+VAULT_PATH=$(echo "$VAULT_PATH" | sed "s/^'//" | sed "s/'$//" | sed 's/^ //' | sed 's/ $//')
 
 echo ""
-echo "Done. Open START HERE - POS FOR BEGINNERS Setup.md in Obsidian."
+python3 scripts/setup_pos.py --vault "$VAULT_PATH"

@@ -17,40 +17,32 @@ This is similar in spirit to the POS Daniel handoff, but it is not Barro-specifi
 - Installs Claude Skills and Superpowers — composable skill libraries for AI agents.
 - Does not connect external accounts automatically.
 
-## Client Quick Start
+## Quick Start
 
-macOS:
+**Option A — Double-click (macOS):**
+1. Clone: `git clone https://github.com/pirajoke/pos-for-beginners.git`
+2. Double-click `install.command`
+3. Drag your Obsidian vault folder into Terminal
+4. Follow the wizard — it walks you through all 8 steps
 
-1. Clone or download this repo:
-   `git clone https://github.com/pirajoke/pos-for-beginners.git`
-2. Open the repo folder.
-3. Double-click `install.command`.
-4. Drag the target Obsidian vault folder into Terminal.
-5. Optional: drag a folder with approved source exports.
-6. Open `START HERE - POS FOR BEGINNERS Setup.md` in Obsidian.
-7. Paste `90-Operations/Setup/Claude First Run.md` into Claude Code, Claude, Codex, or ChatGPT.
-
-Command line:
-
+**Option B — Command line:**
 ```bash
 git clone https://github.com/pirajoke/pos-for-beginners.git
 cd pos-for-beginners
-python3 scripts/bootstrap_client.py --vault "/path/to/ObsidianVault"
+python3 scripts/setup_pos.py --vault "/path/to/ObsidianVault"
 ```
 
-For a non-Obsidian test folder:
-
+**Check progress:**
 ```bash
-python3 scripts/bootstrap_client.py --vault /tmp/pos-demo-vault --allow-non-obsidian
+python3 scripts/setup_pos.py --vault "/path/to/ObsidianVault" --status
 ```
 
-Optional approved source import:
-
+**Jump to a specific step:**
 ```bash
-python3 scripts/bootstrap_client.py \
-  --vault "/path/to/ObsidianVault" \
-  --scan-path "/path/to/approved/source/exports"
+python3 scripts/setup_pos.py --vault "/path/to/ObsidianVault" --step 3
 ```
+
+The wizard automatically: creates vault structure, installs Claude/Codex, configures MCP servers, sets up context, installs skills, initializes GitHub, and guides Telegram bot setup.
 
 ## Installed Folder Structure
 
