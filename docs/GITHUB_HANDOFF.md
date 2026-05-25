@@ -1,46 +1,47 @@
 # GitHub Handoff
 
-## What To Send The Client
+## Ссылка для клиента
 
-Copy this message:
+```
+https://github.com/pirajoke/pos-for-beginners
+```
+
+## Сообщение клиенту (скопировать)
 
 ```
 Привет! Вот твоя персональная операционная система.
 
-Открой терминал и вставь одну строку:
+https://github.com/pirajoke/pos-for-beginners
 
-bash <(curl -fsSL https://raw.githubusercontent.com/pirajoke/pos-for-beginners/main/install.sh)
+Открой терминал и вставь 3 строки:
 
-Скрипт:
-1. Проверит что git и python3 установлены
-2. Скачает проект
-3. Найдёт твой Obsidian vault (или спросит путь)
-4. Запустит wizard — 8 шагов, по одному за раз
+git clone https://github.com/pirajoke/pos-for-beginners.git
+cd pos-for-beginners
+python3 scripts/setup_pos.py --vault ~/ObsidianVault
 
-Можно остановиться на любом шаге и продолжить потом.
-Прогресс сохраняется автоматически.
+Wizard проведёт тебя через 8 шагов — по одному за раз.
+Можно остановиться и продолжить потом. Прогресс сохраняется.
 
-Если что-то непонятно — пиши, разберёмся.
+Если что-то непонятно — пиши.
 ```
 
-## Alternative For Non-Technical Clients
+## Если repo private
 
-If the client cannot use Terminal:
+Сначала дай доступ:
 
-1. Download the repo as ZIP from GitHub
-2. Extract to Desktop
-3. Double-click `install.command` (macOS only)
-4. Drag Obsidian vault folder into Terminal window
+```bash
+gh repo edit pirajoke/pos-for-beginners --visibility public
+```
 
-## Requirements
+Или добавь клиента как collaborator:
 
-- macOS / Linux (Windows: use WSL)
-- Python 3.8+
+```bash
+gh repo add-collaborator pirajoke/pos-for-beginners CLIENT_GITHUB_USERNAME
+```
+
+## Требования у клиента
+
+- macOS / Linux (Windows: WSL)
+- Python 3
 - Git
-- Obsidian (installed, vault created)
-
-## Do Not Include
-
-- Raw client source files
-- Secrets or API tokens
-- Exported mail, Notion data, Granola/Crisp transcripts
+- Obsidian

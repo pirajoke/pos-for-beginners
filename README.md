@@ -19,28 +19,17 @@ This is similar in spirit to the POS Daniel handoff, but it is not Barro-specifi
 
 ## Quick Start
 
-**One-liner (copy → paste → go):**
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/pirajoke/pos-for-beginners/main/install.sh)
-```
-
-That's it. The script checks dependencies, downloads the project, finds your Obsidian vault, and launches the 8-step wizard.
-
-**Other options:**
-
-```bash
-# Manual clone
 git clone https://github.com/pirajoke/pos-for-beginners.git
 cd pos-for-beginners
 python3 scripts/setup_pos.py --vault ~/ObsidianVault
+```
 
-# macOS: double-click install.command
+The wizard walks you through 8 steps. You can stop anytime — progress is saved.
 
-# Check progress
-python3 scripts/setup_pos.py --vault ~/ObsidianVault --status
-
-# Jump to a specific step
-python3 scripts/setup_pos.py --vault ~/ObsidianVault --step 3
+```bash
+python3 scripts/setup_pos.py --vault ~/ObsidianVault --status   # check progress
+python3 scripts/setup_pos.py --vault ~/ObsidianVault --step 3   # jump to step
 ```
 
 ## Installed Folder Structure
