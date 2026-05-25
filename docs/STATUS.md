@@ -4,7 +4,7 @@ Date: 2026-05-25
 
 ## Current Phase
 
-Local repo starter is implemented and validated.
+Local repo starter is implemented, validated, and committed.
 
 ## Done
 
@@ -18,12 +18,12 @@ Local repo starter is implemented and validated.
 - Demo vault bootstrap passed at `/tmp/sisi-demo-vault`.
 - Source discovery smoke test copied a sample Granola export into `70-Sources/Granola/`.
 - Local git repo initialized at `/Users/pirajoke/projects/sisi-obsidian-starter`.
+- First commit created: `4631d2c init sisi obsidian starter`.
 
 ## In Progress
 
-- Obsidian project memory and first git commit.
+- GitHub handoff decision.
 
 ## Next
 
-- Initialize git and commit.
 - Decide whether to create/push a GitHub repo.
