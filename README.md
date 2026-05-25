@@ -19,30 +19,29 @@ This is similar in spirit to the POS Daniel handoff, but it is not Barro-specifi
 
 ## Quick Start
 
-**Option A — Double-click (macOS):**
-1. Clone: `git clone https://github.com/pirajoke/pos-for-beginners.git`
-2. Double-click `install.command`
-3. Drag your Obsidian vault folder into Terminal
-4. Follow the wizard — it walks you through all 8 steps
-
-**Option B — Command line:**
+**One-liner (copy → paste → go):**
 ```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/pirajoke/pos-for-beginners/main/install.sh)
+```
+
+That's it. The script checks dependencies, downloads the project, finds your Obsidian vault, and launches the 8-step wizard.
+
+**Other options:**
+
+```bash
+# Manual clone
 git clone https://github.com/pirajoke/pos-for-beginners.git
 cd pos-for-beginners
-python3 scripts/setup_pos.py --vault "/path/to/ObsidianVault"
-```
+python3 scripts/setup_pos.py --vault ~/ObsidianVault
 
-**Check progress:**
-```bash
-python3 scripts/setup_pos.py --vault "/path/to/ObsidianVault" --status
-```
+# macOS: double-click install.command
 
-**Jump to a specific step:**
-```bash
-python3 scripts/setup_pos.py --vault "/path/to/ObsidianVault" --step 3
-```
+# Check progress
+python3 scripts/setup_pos.py --vault ~/ObsidianVault --status
 
-The wizard automatically: creates vault structure, installs Claude/Codex, configures MCP servers, sets up context, installs skills, initializes GitHub, and guides Telegram bot setup.
+# Jump to a specific step
+python3 scripts/setup_pos.py --vault ~/ObsidianVault --step 3
+```
 
 ## Installed Folder Structure
 

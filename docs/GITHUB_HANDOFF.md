@@ -1,37 +1,46 @@
 # GitHub Handoff
 
-## Target Flow
+## What To Send The Client
 
-```bash
-git clone https://github.com/pirajoke/pos-for-beginners.git
-cd pos-for-beginners
-python3 scripts/bootstrap_client.py --vault "/path/to/ObsidianVault"
+Copy this message:
+
+```
+Привет! Вот твоя персональная операционная система.
+
+Открой терминал и вставь одну строку:
+
+bash <(curl -fsSL https://raw.githubusercontent.com/pirajoke/pos-for-beginners/main/install.sh)
+
+Скрипт:
+1. Проверит что git и python3 установлены
+2. Скачает проект
+3. Найдёт твой Obsidian vault (или спросит путь)
+4. Запустит wizard — 8 шагов, по одному за раз
+
+Можно остановиться на любом шаге и продолжить потом.
+Прогресс сохраняется автоматически.
+
+Если что-то непонятно — пиши, разберёмся.
 ```
 
-## Recommended Repo
+## Alternative For Non-Technical Clients
 
-```text
-https://github.com/pirajoke/pos-for-beginners
-```
+If the client cannot use Terminal:
 
-## What To Tell The Client
+1. Download the repo as ZIP from GitHub
+2. Extract to Desktop
+3. Double-click `install.command` (macOS only)
+4. Drag Obsidian vault folder into Terminal window
 
-```text
-I installed your Obsidian starter vault.
+## Requirements
 
-Open:
-START HERE - POS FOR BEGINNERS Setup.md
-
-Then paste:
-90-Operations/Setup/Claude First Run.md
-
-The assistant will ask one question at a time and save your answers in Obsidian.
-```
+- macOS / Linux (Windows: use WSL)
+- Python 3.8+
+- Git
+- Obsidian (installed, vault created)
 
 ## Do Not Include
 
-- Raw client source files.
-- Secrets.
-- Exported mail.
-- Private Notion data.
-- Granola/Crisp transcripts.
+- Raw client source files
+- Secrets or API tokens
+- Exported mail, Notion data, Granola/Crisp transcripts
