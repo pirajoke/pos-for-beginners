@@ -14,6 +14,7 @@ This is similar in spirit to the POS Daniel handoff, but it is not Barro-specifi
 - Adds safe source folders for Notion, Mail, Granola, Crisp, Obsidian, and manual context.
 - Generates readiness reports for local tools and MCP connector environment variables.
 - Copies approved source exports into the correct source folder when a scan path is provided.
+- Installs Claude Skills and Superpowers — composable skill libraries for AI agents.
 - Does not connect external accounts automatically.
 
 ## Client Quick Start
@@ -65,6 +66,19 @@ ObsidianVault/
 |-- 70-Sources/
 |-- 90-Operations/
 `-- 99-Archive/
+```
+
+## Skills & Superpowers
+
+The bootstrap automatically clones two skill libraries into `30-Resources/`:
+
+- **Claude Skills** (`claude-skills/`) — official Anthropic skill examples: document workflows, research, code workflows.
+- **Superpowers** (`superpowers/`) — composable reusable skills for coding agents by obra.
+
+To update them independently:
+
+```bash
+python3 scripts/install_skills.py --vault "/path/to/ObsidianVault"
 ```
 
 ## Source Connection Rule

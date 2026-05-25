@@ -32,6 +32,7 @@ def bootstrap_summary(vault: Path, scan_paths: list[str]) -> str:
 - Generated MCP readiness report.
 - Ran safe source discovery on approved scan paths.
 - Generated a bootstrap context pack.
+- Installed Claude Skills and Superpowers into `30-Resources/`.
 - Checked vault structure.
 
 ## Approved scan paths
@@ -73,6 +74,7 @@ def main() -> int:
         source_args.extend(["--scan-path", scan_path])
     run_step(source_args)
     run_step(["scripts/generate_context_pack.py", "--vault", str(vault)])
+    run_step(["scripts/install_skills.py", "--vault", str(vault)])
     run_step(["scripts/check_vault.py", "--vault", str(vault)])
 
     output = vault / "90-Operations" / "Setup" / "Bootstrap Summary.md"
