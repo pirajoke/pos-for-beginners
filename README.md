@@ -20,7 +20,8 @@ This is similar in spirit to the POS Daniel handoff, but it is not Barro-specifi
 
 macOS:
 
-1. Clone or download this repo.
+1. Clone or download this repo:
+   `git clone https://github.com/pirajoke/sisi-obsidian-starter.git`
 2. Open the repo folder.
 3. Double-click `install.command`.
 4. Drag the target Obsidian vault folder into Terminal.
@@ -31,6 +32,8 @@ macOS:
 Command line:
 
 ```bash
+git clone https://github.com/pirajoke/sisi-obsidian-starter.git
+cd sisi-obsidian-starter
 python3 scripts/bootstrap_client.py --vault "/path/to/ObsidianVault"
 ```
 

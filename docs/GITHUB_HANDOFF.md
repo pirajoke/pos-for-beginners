@@ -3,7 +3,7 @@
 ## Target Flow
 
 ```bash
-git clone <GITHUB_REPO_URL> sisi-obsidian-starter
+git clone https://github.com/pirajoke/sisi-obsidian-starter.git
 cd sisi-obsidian-starter
 python3 scripts/bootstrap_client.py --vault "/path/to/ObsidianVault"
 ```

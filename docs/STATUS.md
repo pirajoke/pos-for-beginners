@@ -19,11 +19,12 @@ Local repo starter is implemented, validated, and committed.
 - Source discovery smoke test copied a sample Granola export into `70-Sources/Granola/`.
 - Local git repo initialized at `/Users/pirajoke/projects/sisi-obsidian-starter`.
 - First commit created: `4631d2c init sisi obsidian starter`.
+- Private GitHub repo created and pushed: `https://github.com/pirajoke/sisi-obsidian-starter`.
 
 ## In Progress
 
-- GitHub handoff decision.
+- Handoff docs updated with real GitHub URL.
 
 ## Next
 
-- Decide whether to create/push a GitHub repo.
+- Use the repo link for client/Claude Code handoff.
