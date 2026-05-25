@@ -48,13 +48,13 @@ def bootstrap_summary(vault: Path, scan_paths: list[str]) -> str:
 
 ## Next
 
-Open `START HERE - Sisi Obsidian Setup.md`.
+Open `START HERE - POS FOR BEGINNERS Setup.md`.
 Then paste `90-Operations/Setup/Claude First Run.md` into Claude Code, Claude, Codex, or ChatGPT.
 """
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Full safe client bootstrap for the Sisi Obsidian starter.")
+    parser = argparse.ArgumentParser(description="Full safe client bootstrap for POS FOR BEGINNERS.")
     parser.add_argument("--vault", required=True)
     parser.add_argument("--scan-path", action="append", default=[], help="Approved source folder/file to scan. Can be repeated.")
     parser.add_argument("--max-files", type=int, default=50)

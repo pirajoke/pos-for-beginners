@@ -21,7 +21,7 @@ def build_pack(vault: Path, question: str) -> str:
     sections = []
     for relative in files:
         sections.append(f"## {relative}\n\n{read_text(vault / relative, max_chars=5000)}")
-    return f"""# Sisi Vault Context Pack
+    return f"""# POS FOR BEGINNERS Vault Context Pack
 
 ## Current Question
 
@@ -36,7 +36,7 @@ Use this to answer where information lives, what source to connect next, and wha
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Generate a context pack from the Sisi starter vault.")
+    parser = argparse.ArgumentParser(description="Generate a context pack from the POS FOR BEGINNERS vault.")
     parser.add_argument("--vault", required=True)
     parser.add_argument("--question", default="Where is the client context located and what source should be connected first?")
     parser.add_argument("--output")

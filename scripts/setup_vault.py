@@ -7,7 +7,7 @@ from pathlib import Path
 from common import load_structure, safe_write, today
 
 
-def frontmatter(source: str = "sisi-obsidian-starter") -> str:
+def frontmatter(source: str = "pos-for-beginners") -> str:
     return f"""---
 type: note
 status: active
@@ -58,9 +58,9 @@ Source: [ASK ME]
 
 
 def content_for(relative: str) -> str:
-    if relative == "START HERE - Sisi Obsidian Setup.md":
+    if relative == "START HERE - POS FOR BEGINNERS Setup.md":
         return f"""{frontmatter()}
-# START HERE - Sisi Obsidian Setup
+# START HERE - POS FOR BEGINNERS Setup
 
 Open this first:
 
@@ -143,7 +143,7 @@ project-or-area type short-description - YYYY-MM-DD.md
 
 Examples:
 
-- `sisi meeting kickoff - 2026-05-25.md`
+- `pos meeting kickoff - 2026-05-25.md`
 - `notion research workspace-map - 2026-05-25.md`
 - `personal rule note-naming - 2026-05-25.md`
 
@@ -499,7 +499,7 @@ CLAUDE_FIRST_RUN = f"""{frontmatter()}
 Paste this into Claude Code, Claude, Codex, or ChatGPT:
 
 ```text
-You are my Obsidian setup assistant for the Sisi starter vault.
+You are my Obsidian setup assistant for the POS FOR BEGINNERS vault.
 
 Start with:
 90-Operations/Setup/Obsidian Structure Interview.md
@@ -559,7 +559,7 @@ FIRST_WEEK_CHECKLIST = f"""{frontmatter()}
 
 ## Day 1 - Structure
 
-- [ ] Open `START HERE - Sisi Obsidian Setup.md`.
+- [ ] Open `START HERE - POS FOR BEGINNERS Setup.md`.
 - [ ] Run the Obsidian structure interview.
 - [ ] Save answers in `90-Operations/Setup/Setup Answers.md`.
 - [ ] Review `60-Rules/Obsidian Rules.md`.
@@ -606,7 +606,7 @@ FIRST_WEEK_CHECKLIST = f"""{frontmatter()}
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Create the Sisi starter Obsidian vault structure.")
+    parser = argparse.ArgumentParser(description="Create the POS FOR BEGINNERS Obsidian vault structure.")
     parser.add_argument("--vault", required=True)
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()

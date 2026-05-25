@@ -87,7 +87,7 @@ def install_report(vault: Path, created: list[str], skipped: list[str], allow_no
 
 ## Result
 
-Sisi Obsidian starter vault installed or verified.
+POS FOR BEGINNERS vault installed or verified.
 
 ## Vault
 
@@ -114,12 +114,12 @@ Skipped files were preserved. The installer does not overwrite notes by default.
 
 ## Next action
 
-Open `START HERE - Sisi Obsidian Setup.md`.
+Open `START HERE - POS FOR BEGINNERS Setup.md`.
 """
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="One-command installer for the Sisi Obsidian starter vault.")
+    parser = argparse.ArgumentParser(description="One-command installer for the POS FOR BEGINNERS vault.")
     parser.add_argument("--vault", required=True)
     parser.add_argument("--allow-non-obsidian", action="store_true")
     parser.add_argument("--force", action="store_true")
@@ -164,7 +164,7 @@ def main() -> int:
             "external_connectors=not_connected_without_approval",
         ],
     )
-    print(f"Installed Sisi Obsidian starter into: {vault}")
+    print(f"Installed POS FOR BEGINNERS into: {vault}")
     return 0
 
 

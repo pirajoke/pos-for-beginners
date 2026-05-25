@@ -1,4 +1,4 @@
-# PRD: Sisi Obsidian Starter
+# PRD: POS FOR BEGINNERS
 
 ## Objective
 
@@ -6,7 +6,7 @@ Create a cloneable starter repo that installs a simple Obsidian vault structure 
 
 ## Users
 
-- Sisi: beginner or client user setting up a practical vault.
+- POS FOR BEGINNERS: beginner or client user setting up a practical vault.
 - Claude Code / Claude / Codex / ChatGPT: guided interview and vault maintenance assistants.
 - Maxim: operator who hands off the repo and adjusts the template for clients.
 
@@ -31,4 +31,4 @@ Create a cloneable starter repo that installs a simple Obsidian vault structure 
 
 ## Acceptance
 
-The system is accepted when a clean vault can be bootstrapped, checked, and used by a client who only follows `START HERE - Sisi Obsidian Setup.md`.
+The system is accepted when a clean vault can be bootstrapped, checked, and used by a client who only follows `START HERE - POS FOR BEGINNERS Setup.md`.

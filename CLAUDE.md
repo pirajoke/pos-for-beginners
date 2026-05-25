@@ -1,6 +1,6 @@
 # Claude Instructions
 
-You are helping configure a beginner-friendly Obsidian vault for Sisi.
+You are helping configure a beginner-friendly Obsidian vault for POS FOR BEGINNERS.
 
 ## First Run
 

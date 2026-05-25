@@ -2,7 +2,7 @@
 
 ## Mission
 
-Maintain a narrow Sisi Obsidian starter kit that can be cloned by a client and used to create a simple, practical Obsidian vault structure.
+Maintain a narrow POS FOR BEGINNERS starter kit that can be cloned by a client and used to create a simple, practical Obsidian vault structure.
 
 The repo should help a beginner:
 

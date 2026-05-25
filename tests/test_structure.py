@@ -43,7 +43,7 @@ class StructureTests(unittest.TestCase):
                 capture_output=True,
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertTrue((vault / "START HERE - Sisi Obsidian Setup.md").is_file())
+            self.assertTrue((vault / "START HERE - POS FOR BEGINNERS Setup.md").is_file())
             self.assertTrue((vault / "90-Operations" / "Setup" / "MCP Readiness Report.md").is_file())
             self.assertTrue((vault / "60-Rules" / "Agent Working Agreement.md").is_file())
 

@@ -3,15 +3,15 @@
 ## Target Flow
 
 ```bash
-git clone https://github.com/pirajoke/sisi-obsidian-starter.git
-cd sisi-obsidian-starter
+git clone https://github.com/pirajoke/pos-for-beginners.git
+cd pos-for-beginners
 python3 scripts/bootstrap_client.py --vault "/path/to/ObsidianVault"
 ```
 
 ## Recommended Repo
 
 ```text
-https://github.com/pirajoke/sisi-obsidian-starter
+https://github.com/pirajoke/pos-for-beginners
 ```
 
 ## What To Tell The Client
@@ -20,7 +20,7 @@ https://github.com/pirajoke/sisi-obsidian-starter
 I installed your Obsidian starter vault.
 
 Open:
-START HERE - Sisi Obsidian Setup.md
+START HERE - POS FOR BEGINNERS Setup.md
 
 Then paste:
 90-Operations/Setup/Claude First Run.md

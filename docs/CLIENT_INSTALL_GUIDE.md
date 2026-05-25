@@ -8,7 +8,7 @@
 4. Drag your Obsidian vault folder into the Terminal window.
 5. Press Enter.
 6. Optional: drag a folder with approved source exports.
-7. Open `START HERE - Sisi Obsidian Setup.md`.
+7. Open `START HERE - POS FOR BEGINNERS Setup.md`.
 
 ## First AI Step
 

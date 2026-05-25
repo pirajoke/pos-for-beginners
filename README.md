@@ -1,8 +1,8 @@
-# Sisi Obsidian Starter
+# POS FOR BEGINNERS
 
 A small git starter kit that creates a practical Obsidian vault structure, then guides a beginner through setup questions and safe context-source connection.
 
-This is similar in spirit to the POS Daniel handoff, but it is not Barro-specific. It is a reusable client vault starter for Sisi.
+This is similar in spirit to the POS Daniel handoff, but it is not Barro-specific. It is a reusable client vault starter — POS FOR BEGINNERS.
 
 ## What This Repo Does
 
@@ -21,26 +21,26 @@ This is similar in spirit to the POS Daniel handoff, but it is not Barro-specifi
 macOS:
 
 1. Clone or download this repo:
-   `git clone https://github.com/pirajoke/sisi-obsidian-starter.git`
+   `git clone https://github.com/pirajoke/pos-for-beginners.git`
 2. Open the repo folder.
 3. Double-click `install.command`.
 4. Drag the target Obsidian vault folder into Terminal.
 5. Optional: drag a folder with approved source exports.
-6. Open `START HERE - Sisi Obsidian Setup.md` in Obsidian.
+6. Open `START HERE - POS FOR BEGINNERS Setup.md` in Obsidian.
 7. Paste `90-Operations/Setup/Claude First Run.md` into Claude Code, Claude, Codex, or ChatGPT.
 
 Command line:
 
 ```bash
-git clone https://github.com/pirajoke/sisi-obsidian-starter.git
-cd sisi-obsidian-starter
+git clone https://github.com/pirajoke/pos-for-beginners.git
+cd pos-for-beginners
 python3 scripts/bootstrap_client.py --vault "/path/to/ObsidianVault"
 ```
 
 For a non-Obsidian test folder:
 
 ```bash
-python3 scripts/bootstrap_client.py --vault /tmp/sisi-demo-vault --allow-non-obsidian
+python3 scripts/bootstrap_client.py --vault /tmp/pos-demo-vault --allow-non-obsidian
 ```
 
 Optional approved source import:

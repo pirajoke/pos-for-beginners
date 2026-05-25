@@ -26,8 +26,8 @@ Definition of done:
 Validation:
 
 ```bash
-python3 scripts/bootstrap_client.py --vault /tmp/sisi-demo-vault --allow-non-obsidian
-python3 scripts/check_vault.py --vault /tmp/sisi-demo-vault
+python3 scripts/bootstrap_client.py --vault /tmp/pos-demo-vault --allow-non-obsidian
+python3 scripts/check_vault.py --vault /tmp/pos-demo-vault
 ```
 
 ## Phase 2 - Guided Interviews

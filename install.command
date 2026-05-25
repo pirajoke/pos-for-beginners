@@ -3,7 +3,7 @@ set -e
 
 cd "$(dirname "$0")"
 
-echo "Sisi Obsidian Starter installer"
+echo "POS FOR BEGINNERS installer"
 echo ""
 echo "Drag the target Obsidian vault folder here, then press Enter:"
 read VAULT_PATH
@@ -26,4 +26,4 @@ fi
 python3 "${ARGS[@]}"
 
 echo ""
-echo "Done. Open START HERE - Sisi Obsidian Setup.md in Obsidian."
+echo "Done. Open START HERE - POS FOR BEGINNERS Setup.md in Obsidian."

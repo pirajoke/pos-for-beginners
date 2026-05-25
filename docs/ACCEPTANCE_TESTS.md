@@ -7,7 +7,7 @@ The starter is accepted when these are true.
 - A clean vault can be bootstrapped with `scripts/bootstrap_client.py`.
 - The vault has no more than 10 top-level folders.
 - Existing notes are not overwritten by default.
-- `START HERE - Sisi Obsidian Setup.md` exists at the vault root.
+- `START HERE - POS FOR BEGINNERS Setup.md` exists at the vault root.
 
 ## Client Guidance
 

@@ -1,5 +1,5 @@
 {
-  "name": "Sisi Obsidian Starter",
+  "name": "POS FOR BEGINNERS",
   "max_top_level_folders": 10,
   "top_level_folders": [
     "00-Inbox",
@@ -35,7 +35,7 @@
     "99-Archive"
   ],
   "files": [
-    "START HERE - Sisi Obsidian Setup.md",
+    "START HERE - POS FOR BEGINNERS Setup.md",
     "00-Inbox/README.md",
     "10-Projects/README.md",
     "10-Projects/_Example Project/README.md",

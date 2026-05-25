@@ -8,18 +8,18 @@ Local repo starter is implemented, validated, and committed.
 
 ## Done
 
-- Scope defined from the Sisi client request.
+- Scope defined from the POS FOR BEGINNERS client request.
 - Simple top-level Obsidian structure selected.
 - Safe connector/MCP model selected.
 - Dependency-free installer and bootstrap scripts added.
 - Obsidian structure interview and agent working agreement interview added.
 - Connector registry, MCP readiness report, source discovery, and context pack generation added.
 - Unit tests passed.
-- Demo vault bootstrap passed at `/tmp/sisi-demo-vault`.
+- Demo vault bootstrap passed at `/tmp/pos-demo-vault`.
 - Source discovery smoke test copied a sample Granola export into `70-Sources/Granola/`.
-- Local git repo initialized at `/Users/pirajoke/projects/sisi-obsidian-starter`.
-- First commit created: `4631d2c init sisi obsidian starter`.
-- Private GitHub repo created and pushed: `https://github.com/pirajoke/sisi-obsidian-starter`.
+- Local git repo initialized at `/Users/pirajoke/projects/pos-for-beginners`.
+- First commit created: `4631d2c init pos-for-beginners`.
+- Private GitHub repo created and pushed: `https://github.com/pirajoke/pos-for-beginners`.
 
 ## In Progress
 

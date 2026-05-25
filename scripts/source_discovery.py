@@ -74,7 +74,7 @@ No original files were deleted, renamed, or modified.
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Safely copy approved local source files into the Sisi starter vault.")
+    parser = argparse.ArgumentParser(description="Safely copy approved local source files into the POS FOR BEGINNERS vault.")
     parser.add_argument("--vault", required=True)
     parser.add_argument("--scan-path", action="append", default=[])
     parser.add_argument("--max-files", type=int, default=50)

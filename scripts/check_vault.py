@@ -16,7 +16,7 @@ REQUIRED_RULE_TEXT = [
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Check a Sisi starter Obsidian vault.")
+    parser = argparse.ArgumentParser(description="Check a POS FOR BEGINNERS Obsidian vault.")
     parser.add_argument("--vault", required=True)
     args = parser.parse_args()
 

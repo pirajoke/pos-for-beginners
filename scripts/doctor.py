@@ -64,7 +64,7 @@ This report checks local readiness and environment variables only. It does not c
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Write a local readiness report for a Sisi starter vault.")
+    parser = argparse.ArgumentParser(description="Write a local readiness report for a POS FOR BEGINNERS vault.")
     parser.add_argument("--vault", required=True)
     args = parser.parse_args()
 
