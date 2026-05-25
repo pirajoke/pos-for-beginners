@@ -724,8 +724,46 @@ Examples:
 
     vault = Path(args.vault).expanduser().resolve()
 
+    # ── iCloud / permission check ────────────────────────
+    is_icloud = "iCloud" in str(vault) or "Mobile Documents" in str(vault)
+    if is_icloud:
+        warn(f"Vault is inside iCloud: {vault}")
+        print(f"  {YELLOW}macOS blocks Terminal/Codex from writing to iCloud folders.{RESET}")
+        print(f"  {YELLOW}You'll get 'Operation not permitted' unless you fix this.{RESET}")
+        print()
+        print(f"  {BOLD}Two options:{RESET}")
+        print()
+        print(f"  {CYAN}Option A:{RESET} Grant Full Disk Access (recommended)")
+        print(f"    1. Open System Settings → Privacy & Security → Full Disk Access")
+        print(f"    2. Click + and add Terminal (or the app running this script)")
+        print(f"    3. Restart Terminal and re-run this command")
+        print()
+        print(f"  {CYAN}Option B:{RESET} Use a vault outside iCloud")
+        alt = ask("Alternative vault path (or Enter to try iCloud anyway)", "")
+        if alt:
+            vault = Path(alt).expanduser().resolve()
+            print(f"  Using: {vault}")
+
     # Ensure vault dir exists
-    vault.mkdir(parents=True, exist_ok=True)
+    try:
+        vault.mkdir(parents=True, exist_ok=True)
+    except PermissionError:
+        fail(f"Cannot create directory: {vault}")
+        fail("Permission denied. See iCloud/Full Disk Access instructions above.")
+        return 1
+
+    # Quick write test
+    test_file = vault / ".pos-write-test"
+    try:
+        test_file.write_text("ok", encoding="utf-8")
+        test_file.unlink()
+    except (PermissionError, OSError) as e:
+        fail(f"Cannot write to vault: {e}")
+        if is_icloud:
+            fail("iCloud folder is blocked. Grant Full Disk Access or use a different path.")
+        else:
+            fail("Check folder permissions.")
+        return 1
 
     progress = load_progress(vault)
 
