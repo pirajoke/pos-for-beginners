@@ -10,12 +10,13 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
-from common import REPO_ROOT, append_implementation_log, ensure_parent, now_stamp, safe_write, today
+from common import REPO_ROOT, append_implementation_log, ensure_parent, now_stamp, safe_write, slug, today
 
 # ── UI helpers ───────────────────────────────────────────────────
 
@@ -342,6 +343,7 @@ def step_03_mcp(vault: Path, progress: dict) -> bool:
     if connected > 0 or settings["mcpServers"]:
         ensure_parent(claude_settings)
         claude_settings.write_text(json.dumps(settings, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        claude_settings.chmod(0o600)
         ok(f"Settings saved: {claude_settings}")
 
     # Update MCP readiness
@@ -379,9 +381,13 @@ def step_04_context(vault: Path, progress: dict) -> bool:
 
     # Create projects
     while True:
-        project_name = ask("New project name (or press Enter to finish)")
-        if not project_name:
+        raw_name = ask("New project name (or press Enter to finish)")
+        if not raw_name:
             break
+
+        project_name = slug(raw_name) or "untitled"
+        if raw_name != project_name:
+            ok(f"Sanitized to: {project_name}")
 
         project_dir = projects_dir / project_name / "Tech-Base"
         project_dir.mkdir(parents=True, exist_ok=True)
@@ -401,9 +407,10 @@ def step_04_context(vault: Path, progress: dict) -> bool:
     areas_dir = vault / "20-Areas"
     print()
     while True:
-        area_name = ask("Area of responsibility (e.g. health, finance, career — Enter to finish)")
-        if not area_name:
+        raw_area = ask("Area of responsibility (e.g. health, finance, career — Enter to finish)")
+        if not raw_area:
             break
+        area_name = slug(raw_area) or "untitled"
         area_file = areas_dir / f"{area_name}.md"
         safe_write(area_file, f"# {area_name}\n\nType: area\nStatus: active\n\n## Notes\n\n- [ASK ME]\n")
         ok(f"Area '{area_name}' created.")
@@ -528,6 +535,9 @@ node_modules/
     elif has_gh:
         if ask_yn("Create a private GitHub repo for your vault?"):
             repo_name = ask("Repo name", "my-vault")
+            if not re.match(r'^[a-zA-Z0-9._-]+$', repo_name) or len(repo_name) > 100:
+                fail("Invalid repo name. Use letters, numbers, hyphens, dots only.")
+                return True
             result = run(
                 ["gh", "repo", "create", repo_name, "--private", "--source", str(vault), "--push"],
                 check=False
