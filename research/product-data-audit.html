@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аудит — POS FOR BEGINNERS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f5f0e8; --paper: #faf8f4; --ink: #1a1a18; --ink-light: #4a4a45; --ink-faint: #8a8a82;
+  --rule: #d4cfc4; --vermillion: #d42b1e;
+  --forest: #1a6b3c; --forest-light: rgba(26,107,60,0.07);
+  --amber: #b5750d; --amber-light: rgba(181,117,13,0.07);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--paper); color:var(--ink); font-family:'Instrument Sans',sans-serif; font-size:15px; line-height:1.65; }
+nav { position:fixed; top:0; left:0; right:0; height:56px; background:#1a1a18; display:flex; align-items:center; padding:0 24px; z-index:100; gap:6px; overflow-x:auto; }
+nav .logo { font-family:'IBM Plex Mono',monospace; color:#fff; font-size:13px; font-weight:600; letter-spacing:2px; margin-right:16px; white-space:nowrap; }
+nav a { font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); font-size:11px; text-decoration:none; padding:4px 8px; border-radius:3px; white-space:nowrap; transition:color .2s; }
+nav a:hover, nav a.active { color:#fff; }
+nav .legend { margin-left:auto; display:flex; gap:10px; align-items:center; white-space:nowrap; }
+nav .legend span { font-family:'IBM Plex Mono',monospace; font-size:10px; display:flex; align-items:center; gap:4px; }
+nav .legend .dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+.container { max-width:900px; margin:0 auto; padding:80px 32px 120px; }
+h1 { font-family:'Cormorant Garamond',serif; font-size:52px; font-weight:700; line-height:1.1; margin-bottom:12px; }
+h2.section-n { font-family:'Cormorant Garamond',serif; font-size:64px; font-weight:400; color:var(--vermillion); margin-bottom:0; line-height:1; }
+h2.section-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:600; margin-bottom:8px; }
+.section-intro { color:var(--ink-faint); font-size:13px; margin-bottom:24px; line-height:1.5; }
+.section { margin-top:72px; opacity:0; transform:translateY(16px); transition: opacity .45s ease, transform .45s ease; }
+.section.visible { opacity:1; transform:translateY(0); }
+.hero-date { font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-faint); letter-spacing:1px; margin-bottom:16px; }
+.hero-sub { font-size:18px; color:var(--ink-light); max-width:640px; line-height:1.55; }
+.method-box { background:var(--cream); border:1px solid var(--rule); padding:20px 24px; margin:32px 0; font-size:13px; color:var(--ink-light); line-height:1.6; border-radius:4px; }
+.method-box a { color:var(--vermillion); }
+.toc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:24px 0 48px; }
+.toc-grid a { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); text-decoration:none; padding:6px 8px; border:1px solid var(--rule); border-radius:3px; transition:color .2s, border-color .2s; }
+.toc-grid a:hover { color:var(--ink); border-color:var(--ink); }
+/* Tags */
+.tag { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; display:inline-block; padding:2px 8px; border-radius:2px; margin-right:8px; vertical-align:middle; }
+.tag-fact { background:var(--forest-light); color:var(--forest); }
+.tag-hypo { background:var(--amber-light); color:var(--amber); }
+.tag-unknown { background:rgba(212,43,30,0.07); color:var(--vermillion); }
+/* Structured facts */
+.tagged-item { margin-bottom:20px; padding:12px 0; border-bottom:1px solid var(--rule); }
+.fact-claim { font-size:15px; font-weight:500; margin-bottom:6px; }
+.fact-metrics { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:4px; }
+.fact-metrics .pill { font-family:'IBM Plex Mono',monospace; font-size:12px; background:rgba(26,26,24,0.04); padding:3px 8px; border-radius:3px; }
+.pill b { font-weight:600; }
+.fact-source { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-faint); }
+/* Tables */
+.table-wrapper { overflow-x:auto; margin:16px 0 24px; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+thead { background:#1a1a18; color:#fff; }
+th { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:10px 12px; text-align:left; letter-spacing:0.5px; }
+td { padding:10px 12px; border-bottom:1px solid var(--rule); vertical-align:top; }
+tr:hover td { background:var(--cream); }
+/* Bottleneck cards */
+.bottleneck-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.bottleneck-card { background:#fff; border:1px solid var(--rule); border-radius:4px; padding:20px; position:relative; overflow:hidden; transition:box-shadow .2s; }
+.bottleneck-card:hover { box-shadow:4px 4px 0 var(--rule); }
+.bottleneck-card .bn-num { font-family:'Cormorant Garamond',serif; font-size:64px; font-weight:700; color:rgba(26,26,24,0.04); position:absolute; right:12px; top:-8px; line-height:1; }
+.bottleneck-card.crit { border-left:4px solid var(--vermillion); }
+.bottleneck-card.med { border-left:4px solid var(--amber); }
+.bn-title { font-weight:600; font-size:14px; margin-bottom:6px; }
+.bn-body { font-size:13px; color:var(--ink-light); }
+/* Contour cards */
+.contour-card { background:#fff; border:1px solid var(--rule); border-radius:4px; padding:24px; margin-bottom:16px; }
+.contour-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.contour-header h4 { font-size:16px; font-weight:600; }
+.contour-priority { font-family:'IBM Plex Mono',monospace; font-size:11px; padding:2px 8px; border-radius:2px; }
+.p-crit { background:rgba(212,43,30,0.1); color:var(--vermillion); }
+.p-high { background:var(--amber-light); color:var(--amber); }
+.p-med { background:rgba(26,26,24,0.06); color:var(--ink-light); }
+.contour-why { font-size:13px; color:var(--ink-light); margin-bottom:12px; padding:8px 12px; background:var(--cream); border-radius:3px; }
+.contour-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+.contour-grid div { font-size:13px; }
+.contour-grid .label { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); margin-bottom:4px; }
+.risk-bar { font-size:12px; color:var(--vermillion); padding:6px 10px; background:rgba(212,43,30,0.04); border-radius:3px; }
+/* Priority timeline */
+.timeline { position:relative; padding-left:32px; }
+.timeline::before { content:''; position:absolute; left:10px; top:0; bottom:0; width:2px; background:var(--rule); }
+.timeline-item { position:relative; margin-bottom:20px; }
+.timeline-dot { width:12px; height:12px; position:absolute; left:-27px; top:4px; border-radius:0; }
+.dot-now { background:var(--forest); }
+.dot-next { background:var(--amber); }
+.dot-later { background:var(--ink-faint); }
+.timeline-label { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); margin-bottom:4px; }
+/* One hour box */
+.one-hour { border:2px solid var(--vermillion); padding:24px; margin:32px 0; position:relative; border-radius:4px; }
+.one-hour::before { content:'ЕСЛИ БЫ БЫЛ 1 ЧАС'; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; color:var(--vermillion); background:var(--paper); padding:0 8px; position:absolute; top:-8px; left:16px; }
+.one-hour ol { padding-left:20px; }
+.one-hour li { margin-bottom:6px; font-size:14px; }
+/* Unknown items */
+.unknown-item { border-left:3px solid var(--vermillion); background:rgba(212,43,30,0.03); padding:12px 16px; margin-bottom:12px; display:flex; gap:12px; }
+.unknown-q { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--vermillion); line-height:1; }
+/* Question cards */
+.question-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.question-card { background:#fff; border:1px solid var(--rule); border-radius:4px; padding:16px; display:flex; gap:12px; transition:box-shadow .2s; }
+.question-card:hover { box-shadow:4px 4px 0 var(--rule); }
+.q-num { font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--vermillion); font-weight:600; flex-shrink:0; }
+/* Artifact missing */
+.artifact-missing { border:1px solid var(--rule); border-left:4px solid var(--vermillion); padding:16px; margin-bottom:12px; border-radius:0 4px 4px 0; }
+.artifact-missing h5 { font-size:14px; margin-bottom:8px; }
+.artifact-missing .af-row { font-size:12px; color:var(--ink-light); margin-bottom:3px; }
+.artifact-missing .af-label { font-family:'IBM Plex Mono',monospace; font-weight:600; color:var(--ink); }
+/* SVG */
+.svg-wrap { margin:24px 0; overflow-x:auto; }
+@media(max-width:768px) {
+  nav { padding:0 12px; }
+  .container { padding:72px 20px 80px; }
+  h1 { font-size:32px; }
+  h2.section-n { font-size:48px; }
+  .toc-grid { grid-template-columns:1fr 1fr; }
+  .bottleneck-grid, .contour-grid, .question-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">АУДИТ</span>
+  <a href="#s0">00</a><a href="#s1">01</a><a href="#s2">02</a><a href="#s3">03</a><a href="#s4">04</a><a href="#s5">05</a><a href="#s6">06</a><a href="#s7">07</a><a href="#s8">08</a><a href="#s9">09</a><a href="#s10">10</a><a href="#s11">11</a>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--forest)"></span>ФАКТ</span>
+    <span><span class="dot" style="background:var(--amber)"></span>ГИПОТЕЗА</span>
+    <span><span class="dot" style="background:var(--vermillion)"></span>НЕИЗВЕСТНО</span>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- HERO -->
+<div class="hero-date">25 МАЯ 2026</div>
+<h1>Инструмент есть, продукта ещё нет</h1>
+<p class="hero-sub">POS FOR BEGINNERS — полноценный технический starter kit с 52 файлами, 2 289 строками кода, 8-шаговым wizard и 10 коннекторами. Но у проекта нет ни одного платящего клиента, нет ценообразования, нет метрик, нет обратной связи. Инструмент готов к продаже — бизнес ещё не начался.</p>
+
+<!-- METHODOLOGY -->
+<div class="method-box">
+  Агент прочитал 42 файла проекта (Python-скрипты, конфиги, промпты, документация, тесты). Проверил 18 операционных артефактов из чеклиста. Каждый вывод протегирован: <span class="tag tag-fact">ФАКТ</span> / <span class="tag tag-hypo">ГИПОТЕЗА</span> / <span class="tag tag-unknown">НЕИЗВЕСТНО</span> — с указанием источника. Числовые утверждения привязаны к файлам. Данные актуальны на 2026-05-25.<br><br>
+  Скилл: <a href="https://github.com/serejaris/ris-claude-code/tree/main/skills/product-data-audit">Product & Data Audit</a>
+</div>
+
+<!-- TOC -->
+<div class="toc-grid">
+  <a href="#s0">00 Экосистема</a>
+  <a href="#s1">01 Резюме</a>
+  <a href="#s2">02 Что делает</a>
+  <a href="#s3">03 Решения</a>
+  <a href="#s4">04 Данные и системы</a>
+  <a href="#s5">05 Уже есть</a>
+  <a href="#s6">06 Узкие места</a>
+  <a href="#s7">07 Контуры</a>
+  <a href="#s8">08 Приоритеты</a>
+  <a href="#s9">09 Неизвестное</a>
+  <a href="#s10">10 Вопросы</a>
+  <a href="#s11">11 Источники</a>
+</div>
+
+<!-- SECTION 0 -->
+<div class="section" id="s0">
+<h2 class="section-n">00</h2>
+<h2 class="section-title">Диаграмма экосистемы</h2>
+<p class="section-intro">Визуальная карта продукта — что из чего состоит, как связано, где разрывы.</p>
+
+<div class="svg-wrap">
+<svg viewBox="0 0 980 600" xmlns="http://www.w3.org/2000/svg" style="background:#faf8f4;border:1px solid #d4cfc4;border-radius:4px;width:100%">
+  <!-- Layer 1: Ядро выручки -->
+  <rect x="20" y="30" width="940" height="120" rx="4" fill="rgba(26,107,60,0.03)" stroke="none"/>
+  <text x="36" y="52" font-family="IBM Plex Mono" font-size="10" fill="#1a6b3c" font-weight="600" letter-spacing="1.5">ЯДРО ВЫРУЧКИ</text>
+
+  <rect x="40" y="60" width="200" height="76" rx="3" fill="#fff" stroke="#1a6b3c" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="56" y="82" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Консалтинг (POS)</text>
+  <text x="56" y="98" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">Выручка: НЕИЗВЕСТНО</text>
+  <text x="56" y="112" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">Клиенты: 1 (Sisi)</text>
+  <text x="56" y="126" font-family="IBM Plex Mono" font-size="8" fill="#8a8a82">PRD.md, CLAUDE.md</text>
+
+  <rect x="270" y="60" width="200" height="76" rx="3" fill="#fff" stroke="#1a6b3c" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="286" y="82" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">SaaS / Self-service</text>
+  <text x="286" y="98" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">Выручка: 0</text>
+  <text x="286" y="112" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">Пользователи: 0</text>
+  <text x="286" y="126" font-family="IBM Plex Mono" font-size="8" fill="#8a8a82">[гипотеза — нет лендинга]</text>
+
+  <rect x="500" y="60" width="200" height="76" rx="3" fill="#fff" stroke="#1a6b3c" stroke-width="2"/>
+  <text x="516" y="82" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Setup Wizard</text>
+  <text x="516" y="98" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">789 строк Python</text>
+  <text x="516" y="112" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">8 шагов, автоматический</text>
+  <text x="516" y="126" font-family="IBM Plex Mono" font-size="8" fill="#8a8a82">scripts/setup_pos.py</text>
+
+  <rect x="730" y="60" width="210" height="76" rx="3" fill="#fff" stroke="#1a6b3c" stroke-width="2"/>
+  <text x="746" y="82" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Vault Bootstrap</text>
+  <text x="746" y="98" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">10 скриптов, 2 289 строк</text>
+  <text x="746" y="112" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">52 файла в репо</text>
+  <text x="746" y="126" font-family="IBM Plex Mono" font-size="8" fill="#8a8a82">scripts/*.py</text>
+
+  <!-- Layer 2: Удержание и рост -->
+  <rect x="20" y="165" width="940" height="110" rx="4" fill="rgba(181,117,13,0.02)" stroke="none"/>
+  <text x="36" y="187" font-family="IBM Plex Mono" font-size="10" fill="#b5750d" font-weight="600" letter-spacing="1.5">УДЕРЖАНИЕ И РОСТ</text>
+
+  <rect x="40" y="195" width="200" height="66" rx="3" fill="#fff" stroke="#b5750d" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="56" y="217" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Интервью-онбординг</text>
+  <text x="56" y="233" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">3 промпта, 6+8 вопросов</text>
+  <text x="56" y="249" font-family="IBM Plex Mono" font-size="8" fill="#8a8a82">prompts/*.md</text>
+
+  <rect x="270" y="195" width="200" height="66" rx="3" fill="#fff" stroke="#b5750d" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="286" y="217" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Skills & Superpowers</text>
+  <text x="286" y="233" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">2 библиотеки, 20+ скилов</text>
+  <text x="286" y="249" font-family="IBM Plex Mono" font-size="8" fill="#8a8a82">install_skills.py</text>
+
+  <rect x="500" y="195" width="200" height="66" rx="3" fill="#fff" stroke="#b5750d" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="516" y="217" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Post-task протокол</text>
+  <text x="516" y="233" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">TODO + MEMORY + CHANGELOG</text>
+  <text x="516" y="249" font-family="IBM Plex Mono" font-size="8" fill="#8a8a82">setup_vault.py</text>
+
+  <rect x="730" y="195" width="210" height="66" rx="3" fill="#fff" stroke="#b5750d" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="746" y="217" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">First Week Checklist</text>
+  <text x="746" y="233" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">7 дней, 8 шагов</text>
+  <text x="746" y="249" font-family="IBM Plex Mono" font-size="8" fill="#8a8a82">setup_vault.py</text>
+
+  <!-- Layer 3: Медиа и доверие -->
+  <rect x="20" y="290" width="940" height="100" rx="4" fill="rgba(138,138,130,0.02)" stroke="none"/>
+  <text x="36" y="312" font-family="IBM Plex Mono" font-size="10" fill="#8a8a82" font-weight="600" letter-spacing="1.5">ПРИВЛЕЧЕНИЕ И ДОВЕРИЕ</text>
+
+  <rect x="40" y="320" width="200" height="56" rx="3" fill="#fff" stroke="#d4cfc4" stroke-width="1" stroke-dasharray="6,4"/>
+  <text x="56" y="342" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Лендинг</text>
+  <text x="56" y="358" font-family="IBM Plex Mono" font-size="10" fill="#d42b1e">НЕ СУЩЕСТВУЕТ</text>
+
+  <rect x="270" y="320" width="200" height="56" rx="3" fill="#fff" stroke="#d4cfc4" stroke-width="1"/>
+  <text x="286" y="342" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">GitHub (private)</text>
+  <text x="286" y="358" font-family="IBM Plex Mono" font-size="10" fill="#4a4a45">pirajoke/pos-for-beginners</text>
+
+  <rect x="500" y="320" width="200" height="56" rx="3" fill="#fff" stroke="#d4cfc4" stroke-width="1" stroke-dasharray="6,4"/>
+  <text x="516" y="342" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Демо / видео</text>
+  <text x="516" y="358" font-family="IBM Plex Mono" font-size="10" fill="#d42b1e">НЕ СУЩЕСТВУЕТ</text>
+
+  <rect x="730" y="320" width="210" height="56" rx="3" fill="#fff" stroke="#d4cfc4" stroke-width="1" stroke-dasharray="6,4"/>
+  <text x="746" y="342" font-family="Instrument Sans" font-size="14" font-weight="600" fill="#1a1a18">Отзывы / кейсы</text>
+  <text x="746" y="358" font-family="IBM Plex Mono" font-size="10" fill="#d42b1e">НЕТ ДАННЫХ</text>
+
+  <!-- Layer 4: Операционный контур -->
+  <rect x="20" y="405" width="940" height="145" rx="4" fill="rgba(212,43,30,0.02)" stroke="none"/>
+  <text x="36" y="427" font-family="IBM Plex Mono" font-size="10" fill="#d42b1e" font-weight="600" letter-spacing="1.5">ОПЕРАЦИОННЫЙ КОНТУР</text>
+
+  <rect x="40" y="435" width="140" height="56" rx="3" fill="#fff" stroke="#d42b1e" stroke-width="1"/>
+  <text x="50" y="457" font-family="Instrument Sans" font-size="13" font-weight="600" fill="#1a1a18">10 коннекторов</text>
+  <text x="50" y="473" font-family="IBM Plex Mono" font-size="9" fill="#4a4a45">connectors.json</text>
+
+  <rect x="195" y="435" width="140" height="56" rx="3" fill="#fff" stroke="#d42b1e" stroke-width="1"/>
+  <text x="205" y="457" font-family="Instrument Sans" font-size="13" font-weight="600" fill="#1a1a18">MCP конфиг</text>
+  <text x="205" y="473" font-family="IBM Plex Mono" font-size="9" fill="#4a4a45">mcp_servers.example</text>
+
+  <rect x="350" y="435" width="140" height="56" rx="3" fill="#fff" stroke="#d42b1e" stroke-width="1"/>
+  <text x="360" y="457" font-family="Instrument Sans" font-size="13" font-weight="600" fill="#1a1a18">4 unit-теста</text>
+  <text x="360" y="473" font-family="IBM Plex Mono" font-size="9" fill="#4a4a45">tests/test_structure</text>
+
+  <rect x="505" y="435" width="140" height="56" rx="3" fill="#fff" stroke="#d42b1e" stroke-width="1"/>
+  <text x="515" y="457" font-family="Instrument Sans" font-size="13" font-weight="600" fill="#1a1a18">Doctor + Check</text>
+  <text x="515" y="473" font-family="IBM Plex Mono" font-size="9" fill="#4a4a45">doctor.py, check_vault</text>
+
+  <rect x="660" y="435" width="140" height="56" rx="3" fill="#fff" stroke="#d42b1e" stroke-width="1"/>
+  <text x="670" y="457" font-family="Instrument Sans" font-size="13" font-weight="600" fill="#1a1a18">Source Discovery</text>
+  <text x="670" y="473" font-family="IBM Plex Mono" font-size="9" fill="#4a4a45">source_discovery.py</text>
+
+  <rect x="815" y="435" width="140" height="56" rx="3" fill="#fff" stroke="#d42b1e" stroke-width="1"/>
+  <text x="825" y="457" font-family="Instrument Sans" font-size="13" font-weight="600" fill="#1a1a18">Context Pack</text>
+  <text x="825" y="473" font-family="IBM Plex Mono" font-size="9" fill="#4a4a45">generate_context_pack</text>
+
+  <!-- РАЗРЫВЫ -->
+  <rect x="40" y="510" width="900" height="70" rx="3" fill="none" stroke="#d42b1e" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="56" y="530" font-family="IBM Plex Mono" font-size="11" fill="#d42b1e" font-weight="600">РАЗРЫВЫ</text>
+  <text x="56" y="548" font-family="Instrument Sans" font-size="12" fill="#4a4a45">1. Нет обратной связи от клиентов → нет данных для итерации продукта</text>
+  <text x="56" y="564" font-family="Instrument Sans" font-size="12" fill="#4a4a45">2. Нет лендинга и pricing → невозможно привлечь клиентов без личного контакта</text>
+</svg>
+</div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="section" id="s1">
+<h2 class="section-n">01</h2>
+<h2 class="section-title">Короткое резюме</h2>
+<p class="section-intro">Главные выводы аудита в 6 утверждениях. Если читать только это — должно быть понятно что делать дальше.</p>
+
+<div class="tagged-item">
+  <span class="tag tag-fact">ФАКТ</span>
+  <div class="fact-claim">Проект технически готов: 10 скриптов, 2 289 строк Python, 52 файла, 4 unit-теста проходят.</div>
+  <div class="fact-metrics"><span class="pill"><b>Скрипты:</b> 10</span><span class="pill"><b>LOC:</b> 2 289</span><span class="pill"><b>Тесты:</b> 4/4 pass</span><span class="pill"><b>Файлы:</b> 52</span></div>
+  <div class="fact-source">scripts/*.py, tests/test_structure.py, git ls-files</div>
+</div>
+
+<div class="tagged-item">
+  <span class="tag tag-fact">ФАКТ</span>
+  <div class="fact-claim">8-шаговый wizard автоматизирует весь путь клиента: от пустого Obsidian до работающей POS.</div>
+  <div class="fact-metrics"><span class="pill"><b>Шаги:</b> 8</span><span class="pill"><b>Wizard LOC:</b> 789</span><span class="pill"><b>Коннекторы:</b> 10</span></div>
+  <div class="fact-source">scripts/setup_pos.py, docs/ROADMAP.md</div>
+</div>
+
+<div class="tagged-item">
+  <span class="tag tag-unknown">НЕИЗВЕСТНО</span>
+  <div class="fact-claim">Нет данных о платящих клиентах, выручке, конверсии или retention.</div>
+  <div class="fact-metrics"><span class="pill"><b>Клиенты:</b> [число не найдено]</span><span class="pill"><b>Выручка:</b> [число не найдено]</span></div>
+  <div class="fact-source">PRD.md — упоминает одного клиента (Sisi), без финансовых данных</div>
+</div>
+
+<div class="tagged-item">
+  <span class="tag tag-unknown">НЕИЗВЕСТНО</span>
+  <div class="fact-claim">Нет лендинга, ценообразования, и публичного доступа — репо приватный.</div>
+  <div class="fact-source">GitHub repo settings: private</div>
+</div>
+
+<div class="tagged-item">
+  <span class="tag tag-hypo">ГИПОТЕЗА</span>
+  <div class="fact-claim">Продукт находится между двумя моделями: личный консалтинг (настройка POS клиенту) и self-service инструмент (клиент запускает сам).</div>
+  <div class="fact-source">PRD.md: «Users: Sisi — beginner or client user», install.command — self-service</div>
+</div>
+
+<div class="tagged-item">
+  <span class="tag tag-fact">ФАКТ</span>
+  <div class="fact-claim">Проект создан и развит за 1 день (8 коммитов, 25 мая 2026).</div>
+  <div class="fact-metrics"><span class="pill"><b>Коммиты:</b> 8</span><span class="pill"><b>Дата:</b> 2026-05-25</span></div>
+  <div class="fact-source">git log --oneline</div>
+</div>
+</div>
+
+<!-- SECTION 2 -->
+<div class="section" id="s2">
+<h2 class="section-n">02</h2>
+<h2 class="section-title">Что проект делает на самом деле</h2>
+<p class="section-intro">Две версии бизнеса — как он зарабатывает сейчас и чем пытается стать.</p>
+
+<div class="tagged-item">
+  <span class="tag tag-fact">ФАКТ</span>
+  <div class="fact-claim"><strong>Версия 1 (текущий денежный двигатель):</strong> Ручной консалтинг — Максим настраивает Obsidian + AI-агента для клиента, ведёт за руку через настройку.</div>
+  <div class="fact-source">PRD.md: «Maxim: operator who hands off the repo and adjusts the template for clients»</div>
+</div>
+
+<div class="tagged-item">
+  <span class="tag tag-hypo">ГИПОТЕЗА</span>
+  <div class="fact-claim"><strong>Версия 2 (чем пытается стать):</strong> Self-service starter kit — клиент клонирует репо, запускает wizard, получает работающую POS без участия Максима.</div>
+  <div class="fact-source">install.command, setup_pos.py — полная автоматизация 8 шагов</div>
+</div>
+
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Компонент</th><th>Тип бизнеса</th><th>Готовность</th></tr></thead>
+<tbody>
+<tr><td>Vault bootstrap (10 скриптов)</td><td>Продукт</td><td>✓ Работает</td></tr>
+<tr><td>Setup wizard (8 шагов)</td><td>Продукт</td><td>✓ Работает</td></tr>
+<tr><td>Интервью-промпты (3 шт)</td><td>Продукт</td><td>✓ Работает</td></tr>
+<tr><td>MCP подключение</td><td>Продукт</td><td>✓ Конфиг + readiness</td></tr>
+<tr><td>Skills установка</td><td>Продукт</td><td>✓ Работает</td></tr>
+<tr><td>Ценообразование</td><td>Бизнес</td><td>✗ Отсутствует</td></tr>
+<tr><td>Лендинг / сайт</td><td>Маркетинг</td><td>✗ Отсутствует</td></tr>
+<tr><td>Обратная связь</td><td>Бизнес</td><td>✗ Отсутствует</td></tr>
+<tr><td>Аналитика использования</td><td>Продукт</td><td>✗ Отсутствует</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SECTION 3 -->
+<div class="section" id="s3">
+<h2 class="section-n">03</h2>
+<h2 class="section-title">Карта ключевых решений</h2>
+<p class="section-intro">Какие решения принимаются регулярно, на каких данных, и где можно заменить ощущение на цифру.</p>
+
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Решение</th><th>Кто</th><th>Частота</th><th>Данные</th><th>Критерий успеха</th><th>Потенциал AI</th></tr></thead>
+<tbody>
+<tr><td>Какие коннекторы добавить</td><td>Максим</td><td>По запросу</td><td>Интуиция + запрос клиента</td><td>Не определён</td><td>Высокий — анализ usage</td></tr>
+<tr><td>Структура vault для клиента</td><td>Wizard</td><td>1 раз на клиента</td><td>Ответы на 6 вопросов</td><td>Клиент находит заметки</td><td>Уже автоматизировано</td></tr>
+<tr><td>Цена за настройку POS</td><td>Максим</td><td>Не определена</td><td>Нет данных</td><td>Нет</td><td>Низкий — стратегия</td></tr>
+<tr><td>Какой скил добавить клиенту</td><td>Максим</td><td>По ситуации</td><td>Нет логов использования</td><td>Нет</td><td>Высокий — анализ usage</td></tr>
+<tr><td>Делать ли public / SaaS</td><td>Максим</td><td>Стратегический</td><td>Нет market data</td><td>Нет</td><td>Средний — research</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SECTION 4 -->
+<div class="section" id="s4">
+<h2 class="section-n">04</h2>
+<h2 class="section-title">Карта данных и систем</h2>
+<p class="section-intro">Инвентаризация всех систем с данными — что хранят, насколько им можно верить, где слепые зоны.</p>
+
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Система</th><th>Что хранит</th><th>Кто использует</th><th>Качество</th><th>Ограничения</th></tr></thead>
+<tbody>
+<tr><td>GitHub repo</td><td>Весь код, 8 коммитов, docs</td><td>Максим + агенты</td><td>Высокое</td><td>Private — клиенты не видят</td></tr>
+<tr><td>vault_structure.json</td><td>Структура vault: 19 папок, 40 файлов</td><td>Скрипты</td><td>Высокое</td><td>Single source of truth для структуры</td></tr>
+<tr><td>connectors.json</td><td>10 коннекторов: имя, роль, env vars, step</td><td>install.py, doctor.py, mcp_readiness.py</td><td>Высокое</td><td>Нет данных об использовании</td></tr>
+<tr><td>source_patterns.json</td><td>Паттерны для auto-classify файлов</td><td>source_discovery.py</td><td>Среднее</td><td>Только 5 паттернов, 6 расширений</td></tr>
+<tr><td>pos-progress.json</td><td>Прогресс wizard для клиента</td><td>setup_pos.py</td><td>Высокое</td><td>Локальный, не синхронизируется</td></tr>
+<tr><td>Implementation Log</td><td>Лог всех автоматических действий</td><td>Все скрипты</td><td>Высокое</td><td>Append-only, нет ротации</td></tr>
+<tr><td>Obsidian vault (клиент)</td><td>Контекст, правила, заметки, sources</td><td>Клиент + агенты</td><td>Зависит от клиента</td><td>Нет обратного канала к автору</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SECTION 5 -->
+<div class="section" id="s5">
+<h2 class="section-n">05</h2>
+<h2 class="section-title">Что уже есть, но называется по-другому</h2>
+<p class="section-intro">Многие системы зрелее, чем кажутся. Здесь — профессиональные названия того, что уже работает.</p>
+
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Внутреннее название</th><th>Профессиональное</th><th>Почему важно</th></tr></thead>
+<tbody>
+<tr><td>setup_pos.py</td><td>Guided onboarding wizard</td><td>Это полноценный product-led onboarding — редкость для CLI-инструмента</td></tr>
+<tr><td>Интервью-промпты</td><td>Structured intake / discovery framework</td><td>Стандартная практика в консалтинге, здесь автоматизирована</td></tr>
+<tr><td>connectors.json + MCP readiness</td><td>Integration marketplace + readiness checker</td><td>Зрелый паттерн для platform products</td></tr>
+<tr><td>Post-Task Protocol</td><td>Operational runbook / agent governance</td><td>AI-native артефакт — мало кто делает это для начинающих</td></tr>
+<tr><td>doctor.py + check_vault.py</td><td>Health check / smoke test suite</td><td>Снижает support-нагрузку при self-service</td></tr>
+<tr><td>Bootstrap Context Pack</td><td>Agent context injection</td><td>Решает проблему cold-start для AI-агентов</td></tr>
+<tr><td>vault_structure.json</td><td>Schema / DSL для генерации vault</td><td>Позволяет создавать разные конфигурации vault без изменения кода</td></tr>
+<tr><td>Source patterns + discovery</td><td>Auto-classification pipeline</td><td>Прообраз ETL для личных данных</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- SECTION 6 -->
+<div class="section" id="s6">
+<h2 class="section-n">06</h2>
+<h2 class="section-title">Узкие места</h2>
+<p class="section-intro">Конкретные точки, где теряются деньги, время или данные. Каждая — с числом и источником.</p>
+
+<div class="bottleneck-grid">
+
+<div class="bottleneck-card crit">
+  <span class="bn-num">1</span>
+  <div class="bn-title">Нулевая выручка при готовом продукте</div>
+  <div class="bn-body"><span class="tag tag-unknown">НЕИЗВЕСТНО</span> Нет pricing, нет лендинга, нет публичного доступа. 2 289 строк кода работают, но не продаются. Каждый день без pricing = потерянная возможность. <em>[PRD.md, GitHub: private]</em></div>
+</div>
+
+<div class="bottleneck-card crit">
+  <span class="bn-num">2</span>
+  <div class="bn-title">Нет обратной связи от клиентов</div>
+  <div class="bn-body"><span class="tag tag-unknown">НЕИЗВЕСТНО</span> Единственный упомянутый клиент — Sisi. Нет NPS, нет логов использования, нет канала feedback. Продукт развивается в вакууме. <em>[PRD.md]</em></div>
+</div>
+
+<div class="bottleneck-card med">
+  <span class="bn-num">3</span>
+  <div class="bn-title">Wizard требует Python + git для запуска</div>
+  <div class="bn-body"><span class="tag tag-fact">ФАКТ</span> Целевая аудитория = "beginners", но установка требует git clone + python3. 0 из 52 файлов содержат GUI или web-интерфейс. <em>[install.command, README.md]</em></div>
+</div>
+
+<div class="bottleneck-card med">
+  <span class="bn-num">4</span>
+  <div class="bn-title">10 коннекторов в конфиге, 0 проверены с клиентом</div>
+  <div class="bn-body"><span class="tag tag-hypo">ГИПОТЕЗА</span> connectors.json описывает 10 интеграций, но ни одна не тестировалась с реальным клиентом. 6 из 10 имеют статус "planned" или "manual-export-first". <em>[connectors.json]</em></div>
+</div>
+
+<div class="bottleneck-card med">
+  <span class="bn-num">5</span>
+  <div class="bn-title">Всё в одном файле: setup_vault.py = 640 строк контента</div>
+  <div class="bn-body"><span class="tag tag-fact">ФАКТ</span> setup_vault.py содержит 640 строк — весь контент vault (промпты, правила, чеклисты) захардкожен как строки Python. Изменение любого текста = изменение кода. <em>[scripts/setup_vault.py]</em></div>
+</div>
+
+<div class="bottleneck-card med">
+  <span class="bn-num">6</span>
+  <div class="bn-title">Нет Windows-поддержки</div>
+  <div class="bn-body"><span class="tag tag-fact">ФАКТ</span> install.command = zsh-скрипт, только macOS. BACKLOG.md упоминает "Add Windows install script if needed" — не реализовано. <em>[install.command, docs/BACKLOG.md]</em></div>
+</div>
+
+</div>
+</div>
+
+<!-- SECTION 7 -->
+<div class="section" id="s7">
+<h2 class="section-n">07</h2>
+<h2 class="section-title">Контуры внедрения и отсутствующие артефакты</h2>
+<p class="section-intro">Что можно улучшить — автоматизация процессов и недостающие операционные документы.</p>
+
+<h3 style="margin:24px 0 16px;font-size:18px;">7a. Контуры автоматизации</h3>
+
+<div class="contour-card">
+  <div class="contour-header"><h4>Лендинг + pricing page</h4><span class="contour-priority p-crit">Критичный</span></div>
+  <div class="contour-why"><strong>Зачем:</strong> Без лендинга продукт невидим. Клиент не может узнать о POS FOR BEGINNERS без личного контакта с Максимом.</div>
+  <div class="contour-grid">
+    <div><div class="label">АВТОМАТИЗИРОВАТЬ</div>Генерация лендинга из README + ROADMAP. Деплой на Vercel/Netlify. Stripe/Lemon Squeezy для оплаты.</div>
+    <div><div class="label">ОСТАВИТЬ ЧЕЛОВЕКУ</div>Позиционирование, pricing тиры, копирайтинг, value proposition.</div>
+  </div>
+  <div class="risk-bar">Риск: лендинг без чёткого value proposition = трафик без конверсии.</div>
+</div>
+
+<div class="contour-card">
+  <div class="contour-header"><h4>Телеметрия wizard (анонимная)</h4><span class="contour-priority p-high">Высокий</span></div>
+  <div class="contour-why"><strong>Зачем:</strong> Сейчас 0 данных о том, сколько людей запускают wizard, на каком шаге останавливаются, какие коннекторы выбирают.</div>
+  <div class="contour-grid">
+    <div><div class="label">АВТОМАТИЗИРОВАТЬ</div>Opt-in телеметрия в setup_pos.py: какие шаги выполнены, сколько коннекторов, какие ошибки. Отправка в простой webhook (n8n / Supabase).</div>
+    <div><div class="label">ОСТАВИТЬ ЧЕЛОВЕКУ</div>Анализ данных, решения по приоритизации фич.</div>
+  </div>
+  <div class="risk-bar">Риск: Privacy-sensitive — нужен явный opt-in и no-PII policy.</div>
+</div>
+
+<div class="contour-card">
+  <div class="contour-header"><h4>Выделение контента из кода</h4><span class="contour-priority p-high">Высокий</span></div>
+  <div class="contour-why"><strong>Зачем:</strong> 640 строк контента (промпты, правила, чеклисты) захардкожены в setup_vault.py. Изменение текста = изменение Python-кода.</div>
+  <div class="contour-grid">
+    <div><div class="label">АВТОМАТИЗИРОВАТЬ</div>Вынести весь контент в templates/*.md. setup_vault.py читает файлы вместо строковых констант. Jinja2 или простой string.format.</div>
+    <div><div class="label">ОСТАВИТЬ ЧЕЛОВЕКУ</div>Редактирование и улучшение текстов.</div>
+  </div>
+  <div class="risk-bar">Риск: Минимальный — рефакторинг, не изменение поведения.</div>
+</div>
+
+<div class="contour-card">
+  <div class="contour-header"><h4>Web-версия wizard</h4><span class="contour-priority p-med">Средний</span></div>
+  <div class="contour-why"><strong>Зачем:</strong> Целевая аудитория — начинающие. Git clone + python3 — это барьер. Web-wizard снижает порог входа до нуля.</div>
+  <div class="contour-grid">
+    <div><div class="label">АВТОМАТИЗИРОВАТЬ</div>Next.js / static page с формами. Генерация zip-файла с готовым vault. Download вместо git clone.</div>
+    <div><div class="label">ОСТАВИТЬ ЧЕЛОВЕКУ</div>UX-дизайн, тестирование с начинающими.</div>
+  </div>
+  <div class="risk-bar">Риск: Scope creep — из CLI-инструмента в web-app. Только после validation с 5+ клиентами.</div>
+</div>
+
+<h3 style="margin:32px 0 16px;font-size:18px;">7b. Отсутствующие артефакты</h3>
+
+<div class="artifact-missing">
+  <h5>1.1 North Star Metric (NSM) — ОТСУТСТВУЕТ</h5>
+  <div class="af-row"><span class="af-label">Симптом:</span> Непонятно что считать успехом — количество клиентов? wizard completions? retention?</div>
+  <div class="af-row"><span class="af-label">Риск:</span> Развитие фич без привязки к ценности для клиента</div>
+  <div class="af-row"><span class="af-label">Минимум:</span> Одно предложение: «NSM = количество клиентов, дошедших до Step 08 (POS MVP)»</div>
+  <div class="af-row"><span class="af-label">Приоритет:</span> Критичный</div>
+</div>
+
+<div class="artifact-missing">
+  <h5>1.3 Quarterly OKR — ОТСУТСТВУЕТ</h5>
+  <div class="af-row"><span class="af-label">Симптом:</span> Бэклог есть (BACKLOG.md), но нет фильтра «что изменится через 90 дней»</div>
+  <div class="af-row"><span class="af-label">Риск:</span> Бэклог растёт без приоритизации</div>
+  <div class="af-row"><span class="af-label">Минимум:</span> 1 Objective + 3 Key Results на Q3 2026</div>
+  <div class="af-row"><span class="af-label">Приоритет:</span> Высокий</div>
+</div>
+
+<div class="artifact-missing">
+  <h5>3.1 Единый источник правды (SSOT) — ЧАСТИЧНО</h5>
+  <div class="af-row"><span class="af-label">Симптом:</span> vault_structure.json — хороший SSOT для структуры. Но нет SSOT для метрик, клиентов, выручки</div>
+  <div class="af-row"><span class="af-label">Риск:</span> При масштабировании — данные будут в разных местах</div>
+  <div class="af-row"><span class="af-label">Минимум:</span> Таблица: метрика / файл-владелец / дата обновления</div>
+  <div class="af-row"><span class="af-label">Приоритет:</span> Высокий</div>
+</div>
+
+<div class="artifact-missing">
+  <h5>3.2 Определения метрик — ОТСУТСТВУЕТ</h5>
+  <div class="af-row"><span class="af-label">Симптом:</span> Нет определения «клиент» (тот кто запустил wizard? дошёл до step 8? заплатил?)</div>
+  <div class="af-row"><span class="af-label">Риск:</span> Невозможно считать конверсию без определения этапов</div>
+  <div class="af-row"><span class="af-label">Минимум:</span> 5 определений: lead, trial, active client, churned, MRR</div>
+  <div class="af-row"><span class="af-label">Приоритет:</span> Критичный</div>
+</div>
+
+<div class="artifact-missing">
+  <h5>2.4 Список запрещённых действий — ЕСТЬ ДЛЯ КЛИЕНТА, НЕТ ДЛЯ ПРОДУКТА</h5>
+  <div class="af-row"><span class="af-label">Симптом:</span> SECURITY.md и AGENTS.md содержат ограничения для клиентского агента, но нет аналога для разработки самого продукта</div>
+  <div class="af-row"><span class="af-label">Риск:</span> Агент-разработчик может сломать клиентский vault при обновлении</div>
+  <div class="af-row"><span class="af-label">Минимум:</span> Секция в AGENTS.md: «Никогда не менять формат pos-progress.json без миграции»</div>
+  <div class="af-row"><span class="af-label">Приоритет:</span> Высокий</div>
+</div>
+
+<div class="artifact-missing">
+  <h5>4.1 Журнал решений — ОТСУТСТВУЕТ</h5>
+  <div class="af-row"><span class="af-label">Симптом:</span> Решения (10 коннекторов, 8 шагов, Python-only) приняты, но причины не записаны</div>
+  <div class="af-row"><span class="af-label">Риск:</span> Те же вопросы обсуждаются заново при привлечении партнёра/разработчика</div>
+  <div class="af-row"><span class="af-label">Минимум:</span> Файл с 5-10 записями: дата / решение / причина</div>
+  <div class="af-row"><span class="af-label">Приоритет:</span> Средний</div>
+</div>
+
+</div>
+
+<!-- SECTION 8 -->
+<div class="section" id="s8">
+<h2 class="section-n">08</h2>
+<h2 class="section-title">Приоритеты</h2>
+<p class="section-intro">Что делать первым, что потом, что позже. Три горизонта + план на 1 час если нужно начать прямо сейчас.</p>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <div class="timeline-dot dot-now"></div>
+    <div class="timeline-label">СЕЙЧАС — 1-2 недели</div>
+    <p><strong>1. Определить pricing.</strong> Минимум: одна цена за "POS setup" (консалтинг). Записать в канонический файл.</p>
+    <p><strong>2. Провести 3 клиента через wizard.</strong> Собрать feedback: где застревают, что непонятно, что лишнее.</p>
+    <p><strong>3. Написать NSM + определения метрик.</strong> 30 минут работы, критически важно для всех дальнейших решений.</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-dot dot-next"></div>
+    <div class="timeline-label">ПОТОМ — 1-2 месяца</div>
+    <p><strong>4. Лендинг + payment.</strong> Простая страница: что это, для кого, цена, CTA. Stripe/Lemon Squeezy.</p>
+    <p><strong>5. Вынести контент из setup_vault.py.</strong> Templates/*.md вместо Python-строк. Упрощает редактирование.</p>
+    <p><strong>6. Opt-in телеметрия.</strong> Какие шаги проходят, где бросают, какие коннекторы выбирают.</p>
+  </div>
+  <div class="timeline-item">
+    <div class="timeline-dot dot-later"></div>
+    <div class="timeline-label">ПОЗЖЕ — квартал+</div>
+    <p><strong>7. Web-wizard.</strong> Только если validation покажет спрос > 10 клиентов/месяц.</p>
+    <p><strong>8. Шаблоны для ниш.</strong> POS for freelancers, POS for students, POS for startups — разные vault_structure.json.</p>
+    <p><strong>9. Marketplace скилов.</strong> Клиенты делятся кастомными скилами. Только после 50+ активных пользователей.</p>
+  </div>
+</div>
+
+<div class="one-hour">
+  <ol>
+    <li><strong>Определить цену</strong> (10 мин) — записать в файл: «POS setup = X EUR, включает: …»</li>
+    <li><strong>Написать NSM</strong> (5 мин) — «NSM = clients reaching Step 08»</li>
+    <li><strong>Сделать repo public</strong> (2 мин) — или создать отдельный public fork</li>
+    <li><strong>Написать 1-paragraph pitch</strong> (10 мин) — для отправки потенциальным клиентам</li>
+    <li><strong>Отправить pitch 3 людям</strong> (15 мин) — Telegram/email, конкретные люди</li>
+    <li><strong>Создать feedback-форму</strong> (10 мин) — Tally/Typeform, 5 вопросов после wizard</li>
+  </ol>
+</div>
+</div>
+
+<!-- SECTION 9 -->
+<div class="section" id="s9">
+<h2 class="section-n">09</h2>
+<h2 class="section-title">Неизвестное</h2>
+<p class="section-intro">Честный список того, чего мы не знаем. Эти слепые пятна важнее фактов — они показывают где решения принимаются вслепую.</p>
+
+<div class="unknown-item">
+  <span class="unknown-q">?</span>
+  <div><span class="tag tag-unknown">НЕИЗВЕСТНО</span> <strong>Сколько людей готовы платить за настройку POS?</strong> Нет ни одного data point о willingness to pay. Цена не определена.</div>
+</div>
+
+<div class="unknown-item">
+  <span class="unknown-q">?</span>
+  <div><span class="tag tag-unknown">НЕИЗВЕСТНО</span> <strong>На каком шаге wizard клиенты застревают?</strong> Нет телеметрии. Единственный тест — демо автора.</div>
+</div>
+
+<div class="unknown-item">
+  <span class="unknown-q">?</span>
+  <div><span class="tag tag-unknown">НЕИЗВЕСТНО</span> <strong>Нужен ли Obsidian целевой аудитории?</strong> Продукт привязан к Obsidian, но «beginners» могут предпочитать Notion, Apple Notes, или Google Docs.</div>
+</div>
+
+<div class="unknown-item">
+  <span class="unknown-q">?</span>
+  <div><span class="tag tag-unknown">НЕИЗВЕСТНО</span> <strong>Какой % клиентов дойдёт до Step 08?</strong> 8 шагов × 1-3 дня = 2-4 недели. Нет данных о completion rate.</div>
+</div>
+
+<div class="unknown-item">
+  <span class="unknown-q">?</span>
+  <div><span class="tag tag-unknown">НЕИЗВЕСТНО</span> <strong>Кто конкуренты?</strong> Нет анализа рынка: Obsidian starter kits, AI-native personal OS, productivity templates.</div>
+</div>
+
+<div class="unknown-item">
+  <span class="unknown-q">?</span>
+  <div><span class="tag tag-unknown">НЕИЗВЕСТНО</span> <strong>Retention: клиенты используют vault через 30 дней?</strong> Нет способа узнать без телеметрии или follow-up.</div>
+</div>
+
+<div class="unknown-item">
+  <span class="unknown-q">?</span>
+  <div><span class="tag tag-unknown">НЕИЗВЕСТНО</span> <strong>Какие MCP-коннекторы реально нужны клиентам?</strong> 10 в конфиге, но без usage data. Granola, Crisp — нишевые инструменты.</div>
+</div>
+
+</div>
+
+<!-- SECTION 10 -->
+<div class="section" id="s10">
+<h2 class="section-n">10</h2>
+<h2 class="section-title">Вопросы для следующего разговора</h2>
+<p class="section-intro">18 вопросов, которые стоит обсудить. Каждый нацелен на конкретное решение или снятие неизвестности.</p>
+
+<div class="question-grid">
+  <div class="question-card"><span class="q-num">01</span><div>Какая цена за настройку POS кажется справедливой? Один платёж или подписка?</div></div>
+  <div class="question-card"><span class="q-num">02</span><div>Сколько клиентов типа Sisi можешь обслужить в месяц при ручном консалтинге?</div></div>
+  <div class="question-card"><span class="q-num">03</span><div>Кто целевой клиент: фрилансер, предприниматель, студент, PM? Описать одного конкретного.</div></div>
+  <div class="question-card"><span class="q-num">04</span><div>Должен ли продукт оставаться привязанным к Obsidian? Или vault = абстракция (Obsidian/Notion/файлы)?</div></div>
+  <div class="question-card"><span class="q-num">05</span><div>Wizard требует Python + git. Это осознанный барьер (фильтр) или проблема?</div></div>
+  <div class="question-card"><span class="q-num">06</span><div>Sisi прошла wizard? На каком шаге остановилась? Что сказала?</div></div>
+  <div class="question-card"><span class="q-num">07</span><div>Что ценнее для клиента: vault-структура, MCP-подключение, Skills, или CLAUDE.md?</div></div>
+  <div class="question-card"><span class="q-num">08</span><div>Конкуренты: знаешь кого-то кто продаёт «Obsidian starter kits» или «AI personal OS»?</div></div>
+  <div class="question-card"><span class="q-num">09</span><div>Лендинг: maximgrachev.meshly.fr или отдельный домен для POS?</div></div>
+  <div class="question-card"><span class="q-num">10</span><div>Open source или closed? Public repo с премиум-уровнем или полностью приватный?</div></div>
+  <div class="question-card"><span class="q-num">11</span><div>Telegram bot (Step 07) — это must-have или nice-to-have для первых клиентов?</div></div>
+  <div class="question-card"><span class="q-num">12</span><div>Какие из 10 коннекторов реально пробовал подключать? Какие работают end-to-end?</div></div>
+  <div class="question-card"><span class="q-num">13</span><div>Сколько времени занимает ручная настройка POS для одного клиента?</div></div>
+  <div class="question-card"><span class="q-num">14</span><div>Есть ли записанное демо-видео wizard'а? Если нет — сделать 2-минутное.</div></div>
+  <div class="question-card"><span class="q-num">15</span><div>Хочешь масштабировать через self-service или через сеть консультантов?</div></div>
+  <div class="question-card"><span class="q-num">16</span><div>Нужна ли Windows-поддержка для первых 10 клиентов?</div></div>
+  <div class="question-card"><span class="q-num">17</span><div>Какой feedback-канал для клиентов: GitHub Issues, Telegram, форма, email?</div></div>
+  <div class="question-card"><span class="q-num">18</span><div>POS FOR BEGINNERS — это проект на продажу или инструмент для твоего консалтинга?</div></div>
+</div>
+</div>
+
+<!-- SECTION 11 -->
+<div class="section" id="s11">
+<h2 class="section-n">11</h2>
+<h2 class="section-title">Приложение: источники и уровень уверенности</h2>
+<p class="section-intro">Откуда взяты данные и насколько им можно доверять. Прозрачность метода.</p>
+
+<div class="table-wrapper">
+<table>
+<thead><tr><th>Вывод</th><th>Источник</th><th>Цитата / данные</th><th>Уверенность</th></tr></thead>
+<tbody>
+<tr><td>52 файла в репо</td><td>find . -type f | wc -l</td><td>52</td><td>Высокий</td></tr>
+<tr><td>2 289 строк Python</td><td>wc -l scripts/*.py</td><td>2289 total</td><td>Высокий</td></tr>
+<tr><td>10 скриптов</td><td>ls scripts/*.py</td><td>10 файлов</td><td>Высокий</td></tr>
+<tr><td>10 коннекторов</td><td>connectors.json</td><td>10 объектов в массиве</td><td>Высокий</td></tr>
+<tr><td>4 теста проходят</td><td>python3 -m unittest</td><td>Ran 4 tests — OK</td><td>Высокий</td></tr>
+<tr><td>8 коммитов за 1 день</td><td>git log --oneline</td><td>8 коммитов, все 2026-05-25</td><td>Высокий</td></tr>
+<tr><td>789 строк wizard</td><td>wc -l scripts/setup_pos.py</td><td>789</td><td>Высокий</td></tr>
+<tr><td>640 строк контента в коде</td><td>wc -l scripts/setup_vault.py</td><td>640</td><td>Высокий</td></tr>
+<tr><td>1 упомянутый клиент (Sisi)</td><td>PRD.md, CLAUDE.md</td><td>«Sisi: beginner or client user»</td><td>Средне-высокий</td></tr>
+<tr><td>Нет pricing</td><td>Полный поиск по репо</td><td>0 результатов для «price/pricing/EUR/USD»</td><td>Высокий</td></tr>
+<tr><td>Нет лендинга</td><td>README.md, docs/*</td><td>Нет URL, нет deploy config</td><td>Высокий</td></tr>
+<tr><td>Нет телеметрии</td><td>grep -r «telemetry/analytics/tracking»</td><td>0 результатов</td><td>Высокий</td></tr>
+<tr><td>Private repo</td><td>gh repo view</td><td>visibility: private</td><td>Высокий</td></tr>
+<tr><td>macOS only</td><td>install.command:1</td><td>#!/bin/zsh</td><td>Высокий</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// IntersectionObserver for nav highlighting
+const sections = document.querySelectorAll('.section');
+const navLinks = document.querySelectorAll('nav a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.15, rootMargin: '-56px 0px 0px 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
