@@ -22,6 +22,17 @@ class StructureTests(unittest.TestCase):
         names = {connector["name"] for connector in config["connectors"]}
         self.assertTrue({"Obsidian", "Notion", "Gmail", "Granola", "Crisp"}.issubset(names))
 
+    def test_agent_resources_present(self) -> None:
+        config = json.loads((ROOT / "config" / "agent_resources.json").read_text(encoding="utf-8"))
+        repos = {repo["id"] for repo in config["clone_repositories"]}
+        self.assertTrue({"claude-skills", "superpowers", "ris-claude-code"}.issubset(repos))
+
+        skills = {skill["name"] for skill in config["recommended_skills"]}
+        self.assertTrue({"CEO Council", "Product Data Audit", "GitHub Issues Management"}.issubset(skills))
+
+        references = {resource["id"] for resource in config["reference_resources"]}
+        self.assertTrue({"exa", "claude-code-docs", "mcp-docs"}.issubset(references))
+
     def test_prompts_keep_one_question_rule(self) -> None:
         prompt = (ROOT / "prompts" / "OBSIDIAN_STRUCTURE_INTERVIEW.md").read_text(encoding="utf-8")
         self.assertIn("Ask one question at a time", prompt)
@@ -46,6 +57,11 @@ class StructureTests(unittest.TestCase):
             self.assertTrue((vault / "START HERE - POS FOR BEGINNERS Setup.md").is_file())
             self.assertTrue((vault / "90-Operations" / "Setup" / "MCP Readiness Report.md").is_file())
             self.assertTrue((vault / "60-Rules" / "Agent Working Agreement.md").is_file())
+
+    def test_agent_skills_doc_mentions_curated_pack(self) -> None:
+        doc = (ROOT / "docs" / "AGENT_SKILLS_AND_PROMPT_SYSTEMS.md").read_text(encoding="utf-8")
+        for phrase in ["Superpowers", "Claude Skills", "CEO Council", "Product Data Audit", "GitHub Issues", "Exa", "Model Context Protocol"]:
+            self.assertIn(phrase, doc)
 
 
 if __name__ == "__main__":

@@ -32,3 +32,12 @@ The starter is accepted when these are true.
 - A client can paste `90-Operations/Setup/Claude First Run.md` into Claude/Codex and answer questions one at a time.
 - Unknowns remain `[ASK ME]`.
 - Setup actions are logged to `90-Operations/Setup/Implementation Log.md`.
+
+## Skills And Prompt Systems
+
+- `scripts/install_skills.py` installs or updates:
+  - `30-Resources/claude-skills/`
+  - `30-Resources/superpowers/`
+  - `30-Resources/ris-claude-code/`
+- The generated guide mentions CEO Council, Product Data Audit, GitHub Issues Management, Exa, Claude Code Docs, and MCP Docs.
+- The repo includes `docs/AGENT_SKILLS_AND_PROMPT_SYSTEMS.md`.

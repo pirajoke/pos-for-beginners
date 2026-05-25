@@ -24,3 +24,9 @@
 - Add source-link checker.
 - Add secret leakage check.
 - Add bulk import dry-run diff.
+
+## Skills / Resources
+
+- Add a safe optional command to copy selected RIS skills into `~/.claude/skills/`.
+- Add a skill selection interview so beginners choose only 3-5 workflows first.
+- Add update status checks for cloned resource libraries.

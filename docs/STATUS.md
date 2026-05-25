@@ -4,7 +4,7 @@ Date: 2026-05-25
 
 ## Current Phase
 
-Local repo starter is implemented, validated, and committed.
+Local repo starter is implemented and validated. Curated skills/resource pack is being added.
 
 ## Done
 
@@ -19,12 +19,21 @@ Local repo starter is implemented, validated, and committed.
 - Source discovery smoke test copied a sample Granola export into `70-Sources/Granola/`.
 - Local git repo initialized at `/Users/pirajoke/projects/pos-for-beginners`.
 - First commit created: `4631d2c init pos-for-beginners`.
-- Private GitHub repo created and pushed: `https://github.com/pirajoke/pos-for-beginners`.
+- GitHub repo created and pushed: `https://github.com/pirajoke/pos-for-beginners`.
+- Repo is now public.
+- Current pushed head before this skills update: `a91da36 feat: --auto mode — one link, zero prompts, full install`.
+- `setup_pos.py --auto` supports one-link setup flow.
+- `scripts/autoconnect.py` configures MCP and git with in-app approval.
+- `scripts/install_skills.py` installs Claude Skills and Superpowers.
+- Curated resource pack now adds RIS Claude Code skills, including CEO Council, Product Data Audit, and GitHub Issues Management.
+- Resource guide now includes Exa, Claude Code Docs, and MCP Docs.
+- Unit tests passed after the curated pack update.
+- Network validation passed on `/tmp/pos-skill-vault`: `claude-skills`, `superpowers`, and `ris-claude-code` cloned successfully.
 
 ## In Progress
 
-- Handoff docs updated with real GitHub URL.
+- Commit and push curated skills/resource pack update.
 
 ## Next
 
-- Use the repo link for client/Claude Code handoff.
+- Push the curated skills/resource pack commit to GitHub.

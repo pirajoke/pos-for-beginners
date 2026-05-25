@@ -155,10 +155,11 @@ CLAUDE.md                              — who you are + how agents should work
 
 ## STEP 05 — Skills (SK)
 
-**Goal:** Repeatable capabilities: summaries, project management, reviews.
+**Goal:** Repeatable capabilities: summaries, project management, reviews, audits, and strategy workflows.
 
 **What happens:**
 - Browse installed skill libraries in `30-Resources/claude-skills/` and `30-Resources/superpowers/`.
+- Browse installed RIS Claude Code skills in `30-Resources/ris-claude-code/`.
 - Pick 3-5 skills that match your workflow.
 - Install custom skills into `~/.claude/skills/` or your project's skills folder.
 - Create your own skills for repeating workflows.
@@ -166,6 +167,8 @@ CLAUDE.md                              — who you are + how agents should work
 **Installed libraries:**
 - `claude-skills/` — Anthropic official: document workflows, structured research, code workflows.
 - `superpowers/` — obra: composable reusable skills for coding agents.
+- `ris-claude-code/` — CEO Council, Product Data Audit, GitHub Issues workflow.
+- `Skills & Superpowers Guide.md` — local index with Exa, Claude Code docs, and MCP docs links.
 
 **Skill examples to start with:**
 | Skill | What it does | When to use |
@@ -175,6 +178,10 @@ CLAUDE.md                              — who you are + how agents should work
 | Research | Web research with sources | Market analysis, competitor scan |
 | Plan | Implementation planning | Before starting a feature |
 | Summary | Structured summaries | After meetings, after reading |
+| CEO Council | Multiple executive perspectives | High-leverage business/product decisions |
+| Product Data Audit | Map data sources and decision loops | Before automating or changing a product |
+| GitHub Issues | Durable task and session context | When using GitHub as an execution system |
+| Exa | AI-native live web research | Market scans and source discovery |
 
 **How to create a custom skill:**
 ```markdown
@@ -188,7 +195,7 @@ Read git logs, Obsidian changelogs, and Linear issues for the past 7 days.
 Output a structured summary with: done, blocked, next week, metrics.
 ```
 
-**Done when:** You have 3+ skills that save you time on repeating tasks.
+**Done when:** You have 3+ skills/resources that save you time on repeating tasks and know when to use CEO Council, Product Data Audit, and GitHub Issues.
 
 ---
 

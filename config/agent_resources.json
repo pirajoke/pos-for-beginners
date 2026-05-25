@@ -1,0 +1,119 @@
+{
+  "clone_repositories": [
+    {
+      "id": "claude-skills",
+      "name": "Claude Skills",
+      "url": "https://github.com/anthropics/skills.git",
+      "target": "claude-skills",
+      "description": "Official Agent Skills examples and specification from Anthropic.",
+      "use_when": [
+        "document workflows",
+        "structured research",
+        "code workflows",
+        "repeatable operational tasks"
+      ]
+    },
+    {
+      "id": "superpowers",
+      "name": "Superpowers",
+      "url": "https://github.com/obra/superpowers.git",
+      "target": "superpowers",
+      "description": "Composable skills and software development methodology for coding agents.",
+      "use_when": [
+        "splitting agent abilities into reusable skills",
+        "avoiding one huge prompt",
+        "building a personal library of agent workflows"
+      ]
+    },
+    {
+      "id": "ris-claude-code",
+      "name": "RIS Claude Code Skills",
+      "url": "https://github.com/serejaris/ris-claude-code.git",
+      "target": "ris-claude-code",
+      "description": "Reusable Claude Code workflows including CEO Council, Product Data Audit, and GitHub Issues management.",
+      "use_when": [
+        "business strategy decisions",
+        "product/data audits",
+        "GitHub Issues as an execution system"
+      ],
+      "highlight_paths": [
+        "skills/ceo-council/SKILL.md",
+        "skills/product-data-audit/",
+        "skills/gh-issues/"
+      ]
+    }
+  ],
+  "reference_resources": [
+    {
+      "id": "exa",
+      "name": "Exa",
+      "url": "https://exa.ai",
+      "description": "AI-native search API for market scans, competitor research, technical references, and live web-data enrichment.",
+      "use_when": [
+        "research agents",
+        "market scans",
+        "competitor research",
+        "technical reference discovery"
+      ],
+      "env_vars": ["EXA_API_KEY"]
+    },
+    {
+      "id": "claude-code-docs",
+      "name": "Claude Code Docs",
+      "url": "https://code.claude.com/docs",
+      "description": "Claude Code documentation for project memory, CLAUDE.md, terminal workflows, tool permissions, and local code work.",
+      "use_when": [
+        "setting up Claude Code",
+        "debugging Claude Code permissions",
+        "designing project memory and CLAUDE.md"
+      ]
+    },
+    {
+      "id": "mcp-docs",
+      "name": "Model Context Protocol Docs",
+      "url": "https://modelcontextprotocol.io/docs/getting-started/intro",
+      "description": "MCP documentation for connecting AI apps to tools and data sources.",
+      "use_when": [
+        "connecting external tools",
+        "designing MCP server workflows",
+        "explaining source connection safety"
+      ]
+    }
+  ],
+  "recommended_skills": [
+    {
+      "name": "CEO Council",
+      "source_repo": "ris-claude-code",
+      "path": "skills/ceo-council/SKILL.md",
+      "url": "https://github.com/serejaris/ris-claude-code/blob/main/skills/ceo-council/SKILL.md",
+      "use_when": [
+        "decision is high leverage",
+        "multiple executive viewpoints reduce blind spots",
+        "product, growth, or business strategy is unclear"
+      ]
+    },
+    {
+      "name": "Product Data Audit",
+      "source_repo": "ris-claude-code",
+      "path": "skills/product-data-audit/",
+      "url": "https://github.com/serejaris/ris-claude-code/tree/main/skills/product-data-audit",
+      "use_when": [
+        "understand a product before changing it",
+        "analytics, customer signals, and workflows are scattered",
+        "find leverage points before building automations or agents"
+      ]
+    },
+    {
+      "name": "GitHub Issues Management",
+      "source_repo": "ris-claude-code",
+      "path": "skills/gh-issues/",
+      "url": "https://github.com/serejaris/ris-claude-code/tree/main/skills/gh-issues",
+      "use_when": [
+        "creating tasks from chat",
+        "storing future-session context",
+        "tracking implementation status",
+        "connecting agent work to durable GitHub issues"
+      ]
+    }
+  ]
+}

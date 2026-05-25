@@ -6,6 +6,25 @@
 python3 -m unittest discover -s tests
 ```
 
+## Skills Pack Test
+
+This test requires network access because it clones public GitHub repos.
+
+```bash
+rm -rf /tmp/pos-skill-vault
+python3 scripts/bootstrap_client.py --vault /tmp/pos-skill-vault --allow-non-obsidian
+python3 scripts/install_skills.py --vault /tmp/pos-skill-vault
+python3 scripts/check_vault.py --vault /tmp/pos-skill-vault
+```
+
+Expected folders:
+
+```text
+/tmp/pos-skill-vault/30-Resources/claude-skills/
+/tmp/pos-skill-vault/30-Resources/superpowers/
+/tmp/pos-skill-vault/30-Resources/ris-claude-code/
+```
+
 ## Demo Vault Test
 
 ```bash

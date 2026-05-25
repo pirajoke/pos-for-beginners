@@ -392,6 +392,8 @@ def step_05_skills(vault: Path, progress: dict) -> bool:
     if run_script("install_skills.py", ["--vault", str(vault)]):
         ok("Claude Skills (Anthropic) installed → 30-Resources/claude-skills/")
         ok("Superpowers (obra) installed → 30-Resources/superpowers/")
+        ok("RIS Claude Code skills installed → 30-Resources/ris-claude-code/")
+        ok("Agent Skills guide written → 30-Resources/Skills & Superpowers Guide.md")
     else:
         warn("Skills installation failed. Check your internet connection.")
         warn("You can run manually: python3 scripts/install_skills.py --vault ...")
@@ -410,6 +412,10 @@ def step_05_skills(vault: Path, progress: dict) -> bool:
         powers = [d.name for d in superpowers_dir.iterdir() if d.is_dir()]
         if powers:
             print(f"  Available Superpowers: {', '.join(powers[:10])}")
+
+    ris_skills_dir = vault / "30-Resources" / "ris-claude-code" / "skills"
+    if ris_skills_dir.exists():
+        print("  Recommended RIS skills: ceo-council, product-data-audit, gh-issues")
 
     # Custom skills directory
     custom_skills = Path.home() / ".claude" / "skills"

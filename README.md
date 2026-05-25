@@ -14,7 +14,7 @@ It is a reusable client vault starter — POS FOR BEGINNERS.
 - Adds safe source folders for Notion, Mail, Granola, Crisp, Obsidian, and manual context.
 - Generates readiness reports for local tools and MCP connector environment variables.
 - Copies approved source exports into the correct source folder when a scan path is provided.
-- Installs Claude Skills and Superpowers — composable skill libraries for AI agents.
+- Installs Claude Skills, Superpowers, and the RIS Claude Code skill pack as composable skill/reference libraries for AI agents.
 - Does not connect external accounts automatically.
 
 ## Quick Start
@@ -50,10 +50,18 @@ ObsidianVault/
 
 ## Skills & Superpowers
 
-The bootstrap automatically clones two skill libraries into `30-Resources/`:
+The bootstrap automatically clones three skill/resource libraries into `30-Resources/`:
 
 - **Claude Skills** (`claude-skills/`) — official Anthropic skill examples: document workflows, research, code workflows.
 - **Superpowers** (`superpowers/`) — composable reusable skills for coding agents by obra.
+- **RIS Claude Code Skills** (`ris-claude-code/`) — CEO Council, Product Data Audit, GitHub Issues workflow, and related Claude Code operating patterns.
+
+It also writes:
+
+- `30-Resources/Skills & Superpowers Guide.md`
+- `docs/AGENT_SKILLS_AND_PROMPT_SYSTEMS.md`
+
+The guide includes Exa, Claude Code docs, and MCP docs as reference resources.
 
 To update them independently:
 
