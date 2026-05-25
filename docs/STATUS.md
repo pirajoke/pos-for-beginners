@@ -4,7 +4,7 @@ Date: 2026-05-25
 
 ## Current Phase
 
-Local repo starter is implemented and validated. Curated skills/resource pack is being added.
+Local repo starter is implemented, validated, and pushed. Curated skills/resource pack is live.
 
 ## Done
 
@@ -29,11 +29,13 @@ Local repo starter is implemented and validated. Curated skills/resource pack is
 - Resource guide now includes Exa, Claude Code Docs, and MCP Docs.
 - Unit tests passed after the curated pack update.
 - Network validation passed on `/tmp/pos-skill-vault`: `claude-skills`, `superpowers`, and `ris-claude-code` cloned successfully.
+- Curated skills/resource pack commit pushed: `7749755 feat: add curated agent skills pack`.
 
 ## In Progress
 
-- Commit and push curated skills/resource pack update.
+- None.
 
 ## Next
 
-- Push the curated skills/resource pack commit to GitHub.
+- Use the repo link for client/Claude Code handoff.
+- Later: add optional command to copy selected skills into `~/.claude/skills/` after the client chooses which workflows they need.
