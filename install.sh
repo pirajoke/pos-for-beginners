@@ -102,4 +102,4 @@ fi
 # ── Run wizard ──────────────────────────────────────────
 echo ""
 cd "$DIR"
-python3 scripts/setup_pos.py --vault "$VAULT"
+python3 scripts/setup_pos.py --vault "$VAULT" --auto --allow-non-obsidian

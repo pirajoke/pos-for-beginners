@@ -32,6 +32,9 @@ CYAN = "\033[96m"
 RED = "\033[91m"
 RESET = "\033[0m"
 
+# Global auto-mode flag — set by --auto, skips all interactive prompts
+AUTO_MODE = False
+
 
 def banner(step: int, title: str, tag: str) -> None:
     print(f"\n{'─' * 60}")
@@ -52,6 +55,10 @@ def fail(msg: str) -> None:
 
 
 def ask(prompt: str, default: str = "") -> str:
+    if AUTO_MODE:
+        if default:
+            ok(f"{prompt}: {default} (auto)")
+        return default
     suffix = f" [{default}]" if default else ""
     try:
         answer = input(f"  → {prompt}{suffix}: ").strip()
@@ -61,6 +68,9 @@ def ask(prompt: str, default: str = "") -> str:
 
 
 def ask_yn(prompt: str, default: bool = True) -> bool:
+    if AUTO_MODE:
+        ok(f"{prompt}: {'yes' if default else 'no'} (auto)")
+        return default
     hint = "Y/n" if default else "y/N"
     try:
         answer = input(f"  → {prompt} [{hint}]: ").strip().lower()
@@ -164,7 +174,7 @@ def step_02_claude(vault: Path, progress: dict) -> bool:
 
     if has_claude:
         ok(f"Claude Code found: {shutil.which('claude')}")
-    else:
+    elif not AUTO_MODE:
         warn("Claude Code not found.")
         if ask_yn("Install Claude Code now? (npm install -g @anthropic-ai/claude-code)"):
             result = run(["npm", "install", "-g", "@anthropic-ai/claude-code"], check=False)
@@ -172,6 +182,8 @@ def step_02_claude(vault: Path, progress: dict) -> bool:
                 ok("Claude Code installed.")
             else:
                 warn("Installation failed. You can install it manually later.")
+    else:
+        warn("Claude Code not found. Install later: npm install -g @anthropic-ai/claude-code")
 
     if has_codex:
         ok(f"Codex found: {shutil.which('codex')}")
@@ -179,9 +191,10 @@ def step_02_claude(vault: Path, progress: dict) -> bool:
     # Generate CLAUDE.md if not exists
     claude_md = vault / "CLAUDE.md"
     if not claude_md.exists():
-        print("\n  Let's create your personal CLAUDE.md (agent instructions).\n")
+        if not AUTO_MODE:
+            print("\n  Let's create your personal CLAUDE.md (agent instructions).\n")
 
-        name = ask("Your name")
+        name = ask("Your name", "[ASK ME]")
         role = ask("Your role (e.g. PM, developer, student, founder)", "builder")
         language = ask("Preferred language for communication", "English")
         projects = ask("Active projects (comma-separated)", "")
@@ -241,14 +254,14 @@ def step_03_mcp(vault: Path, progress: dict) -> bool:
 
     print("  Auto-configuring MCP servers...\n")
 
-    # Collect optional API keys interactively
+    # Collect optional API keys (auto mode: only from env, no prompts)
     extra_keys: dict[str, str] = {}
     for srv in KEY_SERVERS:
         env_val = os.environ.get(srv["env_key"], "")
         if env_val:
             ok(f"{srv['name']}: key found in environment ({srv['env_key']})")
             extra_keys[srv["env_key"]] = env_val
-        else:
+        elif not AUTO_MODE:
             key = ask(f"{srv['name']} API key ({srv['env_key']}, Enter to skip)")
             if key:
                 extra_keys[srv["env_key"]] = key
@@ -306,7 +319,8 @@ def step_04_context(vault: Path, progress: dict) -> bool:
         ok("Already completed. Skipping.")
         return True
 
-    print("  Let's set up your project context.\n")
+    if not AUTO_MODE:
+        print("  Let's set up your project context.\n")
 
     # Check existing projects
     projects_dir = vault / "10-Projects"
@@ -314,44 +328,47 @@ def step_04_context(vault: Path, progress: dict) -> bool:
 
     if existing:
         ok(f"Existing projects: {', '.join(existing)}")
-    else:
+    elif not AUTO_MODE:
         print("  No projects found yet.\n")
 
-    # Create projects
-    while True:
-        raw_name = ask("New project name (or press Enter to finish)")
-        if not raw_name:
-            break
+    # Create projects (skip in auto mode)
+    if not AUTO_MODE:
+        while True:
+            raw_name = ask("New project name (or press Enter to finish)")
+            if not raw_name:
+                break
 
-        project_name = slug(raw_name) or "untitled"
-        if raw_name != project_name:
-            ok(f"Sanitized to: {project_name}")
+            project_name = slug(raw_name) or "untitled"
+            if raw_name != project_name:
+                ok(f"Sanitized to: {project_name}")
 
-        project_dir = projects_dir / project_name / "Tech-Base"
-        project_dir.mkdir(parents=True, exist_ok=True)
+            project_dir = projects_dir / project_name / "Tech-Base"
+            project_dir.mkdir(parents=True, exist_ok=True)
 
-        description = ask(f"  One-line description for '{project_name}'", "[ASK ME]")
-        status = ask(f"  Status (active/paused/done)", "active")
+            description = ask(f"  One-line description for '{project_name}'", "[ASK ME]")
+            status = ask(f"  Status (active/paused/done)", "active")
 
-        safe_write(project_dir / "TODO.md", f"# TODO — {project_name}\n\n- [ ] Define first tasks\n")
-        safe_write(project_dir / "MEMORY.md", f"# MEMORY — {project_name}\n\n## Description\n\n{description}\n\n## Status\n\n{status}\n\n## NEXT STEP\n\n- [ASK ME]\n\n## Last Completed\n\n- Created project structure ({today()})\n")
-        safe_write(project_dir / "CHANGELOG.md", f"# CHANGELOG — {project_name}\n\n- {today()}: Project created.\n")
-        safe_write(project_dir / "MISTAKES.md", f"# MISTAKES — {project_name}\n\nRecord repeated errors, blockers, and lessons here.\n")
-        safe_write(projects_dir / project_name / "README.md", f"# {project_name}\n\n{description}\n\nStatus: {status}\n")
+            safe_write(project_dir / "TODO.md", f"# TODO — {project_name}\n\n- [ ] Define first tasks\n")
+            safe_write(project_dir / "MEMORY.md", f"# MEMORY — {project_name}\n\n## Description\n\n{description}\n\n## Status\n\n{status}\n\n## NEXT STEP\n\n- [ASK ME]\n\n## Last Completed\n\n- Created project structure ({today()})\n")
+            safe_write(project_dir / "CHANGELOG.md", f"# CHANGELOG — {project_name}\n\n- {today()}: Project created.\n")
+            safe_write(project_dir / "MISTAKES.md", f"# MISTAKES — {project_name}\n\nRecord repeated errors, blockers, and lessons here.\n")
+            safe_write(projects_dir / project_name / "README.md", f"# {project_name}\n\n{description}\n\nStatus: {status}\n")
 
-        ok(f"Project '{project_name}' created with Tech-Base structure.")
+            ok(f"Project '{project_name}' created with Tech-Base structure.")
 
-    # Check areas
-    areas_dir = vault / "20-Areas"
-    print()
-    while True:
-        raw_area = ask("Area of responsibility (e.g. health, finance, career — Enter to finish)")
-        if not raw_area:
-            break
-        area_name = slug(raw_area) or "untitled"
-        area_file = areas_dir / f"{area_name}.md"
-        safe_write(area_file, f"# {area_name}\n\nType: area\nStatus: active\n\n## Notes\n\n- [ASK ME]\n")
-        ok(f"Area '{area_name}' created.")
+        # Check areas
+        areas_dir = vault / "20-Areas"
+        print()
+        while True:
+            raw_area = ask("Area of responsibility (e.g. health, finance, career — Enter to finish)")
+            if not raw_area:
+                break
+            area_name = slug(raw_area) or "untitled"
+            area_file = areas_dir / f"{area_name}.md"
+            safe_write(area_file, f"# {area_name}\n\nType: area\nStatus: active\n\n## Notes\n\n- [ASK ME]\n")
+            ok(f"Area '{area_name}' created.")
+    else:
+        ok("Projects and areas: add later via Claude Code or re-run without --auto.")
 
     # Regenerate context pack
     run_script("generate_context_pack.py", ["--vault", str(vault)])
@@ -397,7 +414,7 @@ def step_05_skills(vault: Path, progress: dict) -> bool:
     # Custom skills directory
     custom_skills = Path.home() / ".claude" / "skills"
     if not custom_skills.exists():
-        if ask_yn("\n  Create ~/.claude/skills/ for your custom skills?"):
+        if AUTO_MODE or ask_yn("\n  Create ~/.claude/skills/ for your custom skills?"):
             custom_skills.mkdir(parents=True, exist_ok=True)
             ok(f"Created {custom_skills}")
             # Create an example skill
@@ -442,7 +459,7 @@ def step_06_github(vault: Path, progress: dict) -> bool:
     from autoconnect import setup_git
     create_repo = False
 
-    if has_command("gh") and not git_info.get("vault_remote"):
+    if not AUTO_MODE and has_command("gh") and not git_info.get("vault_remote"):
         create_repo = ask_yn("Create a private GitHub repo for your vault?")
 
     git_result = setup_git(vault, create_remote=create_repo)
@@ -492,6 +509,11 @@ def step_07_telegram(vault: Path, progress: dict) -> bool:
 
     print("  The Telegram bot connects your system to a chat interface.\n")
     print(f"  {DIM}Architecture: Telegram → Bot API → Script/n8n → Claude API → Obsidian{RESET}\n")
+
+    if AUTO_MODE:
+        warn("Telegram bot: skipped (set up later with @BotFather).")
+        mark_done(vault, progress, 7)
+        return True
 
     token = ask("Telegram bot token (from @BotFather, or Enter to skip)")
 
@@ -635,10 +657,15 @@ Examples:
     parser.add_argument("--vault", required=True, help="Path to your Obsidian vault")
     parser.add_argument("--step", type=int, help="Jump to a specific step (1-8)")
     parser.add_argument("--status", action="store_true", help="Show current progress and exit")
+    parser.add_argument("--auto", action="store_true", help="Fully automatic setup — no prompts, sensible defaults")
     parser.add_argument("--allow-non-obsidian", action="store_true")
     args = parser.parse_args()
 
     vault = Path(args.vault).expanduser().resolve()
+
+    # Set global auto mode
+    global AUTO_MODE
+    AUTO_MODE = args.auto
 
     # ── iCloud / permission check ────────────────────────
     is_icloud = "iCloud" in str(vault) or "Mobile Documents" in str(vault)
@@ -730,8 +757,8 @@ Examples:
             if not func(vault, progress):
                 return 1
 
-        # After each step, ask to continue
-        if num < 8 and not step_done(progress, num + 1):
+        # After each step, ask to continue (skip in auto mode)
+        if not AUTO_MODE and num < 8 and not step_done(progress, num + 1):
             print()
             if not ask_yn(f"Continue to Step {num + 1:02d}?"):
                 print(f"\n  {DIM}Paused. Re-run to continue from Step {num + 1:02d}.{RESET}")
