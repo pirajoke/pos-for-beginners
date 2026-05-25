@@ -2,7 +2,7 @@
 
 A small git starter kit that creates a practical Obsidian vault structure, then guides a beginner through setup questions and safe context-source connection.
 
-This is similar in spirit to the POS Daniel handoff, but it is not Barro-specific. It is a reusable client vault starter — POS FOR BEGINNERS.
+It is a reusable client vault starter — POS FOR BEGINNERS.
 
 ## What This Repo Does
 
