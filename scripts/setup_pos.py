@@ -17,6 +17,10 @@ import sys
 from pathlib import Path
 
 from common import REPO_ROOT, append_implementation_log, ensure_parent, now_stamp, safe_write, slug, today
+from autoconnect import (
+    autoconnect, format_status, get_status,
+    ZERO_CONFIG_SERVERS, KEY_SERVERS, BUILTIN_SERVERS,
+)
 
 # ── UI helpers ───────────────────────────────────────────────────
 
@@ -226,51 +230,7 @@ def step_02_claude(vault: Path, progress: dict) -> bool:
     return True
 
 
-# ── STEP 03: MCP Servers ────────────────────────────────────────
-
-MCP_SERVERS = [
-    {
-        "id": "obsidian",
-        "name": "Obsidian",
-        "config": {
-            "command": "npx",
-            "args": ["-y", "mcp-obsidian"],
-        },
-        "env_keys": ["OBSIDIAN_VAULT_PATH"],
-        "env_prompt": "Path to your Obsidian vault",
-    },
-    {
-        "id": "notion",
-        "name": "Notion",
-        "config": {
-            "command": "npx",
-            "args": ["-y", "@notionhq/notion-mcp-server"],
-        },
-        "env_keys": ["NOTION_TOKEN"],
-        "env_prompt": "Notion integration token (starts with ntn_)",
-    },
-    {
-        "id": "linear",
-        "name": "Linear",
-        "config": {
-            "type": "http",
-            "url": "https://mcp.linear.app/mcp",
-        },
-        "env_keys": [],
-        "env_prompt": None,
-    },
-    {
-        "id": "exa",
-        "name": "Exa (web search)",
-        "config": {
-            "command": "npx",
-            "args": ["-y", "@anthropic-ai/exa-mcp-server"],
-        },
-        "env_keys": ["EXA_API_KEY"],
-        "env_prompt": "Exa API key",
-    },
-]
-
+# ── STEP 03: MCP Servers (auto-connect) ────────────────────────
 
 def step_03_mcp(vault: Path, progress: dict) -> bool:
     banner(3, "MCP Servers", "MCP")
@@ -279,83 +239,61 @@ def step_03_mcp(vault: Path, progress: dict) -> bool:
         ok("Already completed. Skipping.")
         return True
 
-    # Find or create settings file
-    claude_settings = Path.home() / ".claude" / "settings.json"
-    settings: dict = {}
-    if claude_settings.exists():
-        settings = json.loads(claude_settings.read_text(encoding="utf-8"))
-        ok(f"Found existing settings: {claude_settings}")
-    else:
-        ok("Will create new Claude settings file.")
+    print("  Auto-configuring MCP servers...\n")
 
-    if "mcpServers" not in settings:
-        settings["mcpServers"] = {}
-
-    connected = 0
-    print("\n  Available MCP servers to connect:\n")
-    for i, server in enumerate(MCP_SERVERS, 1):
-        already = server["id"] in settings["mcpServers"]
-        status = f"{GREEN}connected{RESET}" if already else f"{DIM}not connected{RESET}"
-        print(f"    {i}. {server['name']} — {status}")
-        if already:
-            connected += 1
-
-    print()
-
-    for server in MCP_SERVERS:
-        if server["id"] in settings["mcpServers"]:
-            continue
-
-        if not ask_yn(f"Connect {server['name']}?", default=False):
-            continue
-
-        config = dict(server["config"])
-
-        # Collect env vars
-        if server["env_keys"]:
-            env = {}
-            for key in server["env_keys"]:
-                existing = os.environ.get(key, "")
-                if server["id"] == "obsidian" and key == "OBSIDIAN_VAULT_PATH":
-                    existing = str(vault)
-                value = ask(f"{server['env_prompt']} ({key})", existing)
-                if value:
-                    env[key] = value
-                else:
-                    warn(f"Skipping {server['name']} — {key} not provided.")
-                    break
-            else:
-                config["env"] = env
-                settings["mcpServers"][server["id"]] = config
-                ok(f"{server['name']} configured.")
-                connected += 1
-                continue
+    # Collect optional API keys interactively
+    extra_keys: dict[str, str] = {}
+    for srv in KEY_SERVERS:
+        env_val = os.environ.get(srv["env_key"], "")
+        if env_val:
+            ok(f"{srv['name']}: key found in environment ({srv['env_key']})")
+            extra_keys[srv["env_key"]] = env_val
         else:
-            settings["mcpServers"][server["id"]] = config
-            ok(f"{server['name']} configured.")
-            connected += 1
+            key = ask(f"{srv['name']} API key ({srv['env_key']}, Enter to skip)")
+            if key:
+                extra_keys[srv["env_key"]] = key
 
-    # Gmail and Calendar are built-in to Claude.ai
-    print(f"\n  {DIM}Gmail and Google Calendar are built-in to Claude.ai — no MCP config needed.{RESET}")
-    print(f"  {DIM}GitHub uses 'gh' CLI — no MCP config needed (install: brew install gh).{RESET}")
+    # Run autoconnect
+    summary = autoconnect(
+        vault,
+        write_global=True,
+        create_remote=False,
+        extra_keys=extra_keys if extra_keys else None,
+    )
 
-    # Write settings
-    if connected > 0 or settings["mcpServers"]:
-        ensure_parent(claude_settings)
-        claude_settings.write_text(json.dumps(settings, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        claude_settings.chmod(0o600)
-        ok(f"Settings saved: {claude_settings}")
+    # Report what was configured
+    print()
+    print(f"  {BOLD}Auto-configured:{RESET}")
+    for sid in summary["mcp_configured"]:
+        ok(f"{sid}")
 
-    # Update MCP readiness
+    if summary["mcp_needs_key"]:
+        print(f"\n  {YELLOW}Skipped (no API key):{RESET}")
+        for s in summary["mcp_needs_key"]:
+            warn(f"{s['name']} — set {s['env_key']} and re-run")
+
+    print(f"\n  {DIM}Built-in (approve in app):{RESET}")
+    for srv in BUILTIN_SERVERS:
+        print(f"    {CYAN}i{RESET} {srv['name']}: {srv['note']}")
+
+    print(f"\n  {BOLD}Settings written:{RESET}")
+    ok(f"Project: {vault}/.claude/settings.json")
+    if summary.get("global_path"):
+        ok(f"Global:  ~/.claude/settings.json")
+    if summary.get("codex_path"):
+        ok(f"Codex:   {summary['codex_path']}")
+
+    print(f"\n  {GREEN}{BOLD}How it works:{RESET}")
+    print(f"  1. Open this vault folder in Claude Code or Codex")
+    print(f"  2. The app detects MCP servers from .claude/settings.json")
+    print(f"  3. You'll see an approval prompt for each server")
+    print(f"  4. Click 'Approve' — done, server is connected")
+    print(f"  {DIM}No manual config needed. Everything is pre-configured.{RESET}")
+
+    # Update MCP readiness report
     run_script("mcp_readiness.py", ["--vault", str(vault)])
 
-    if connected >= 2:
-        mark_done(vault, progress, 3)
-    else:
-        warn(f"Only {connected} server(s) connected. Connect at least 2 to complete this step.")
-        warn("You can re-run this wizard later to add more.")
-        save_progress(vault, progress)
-
+    mark_done(vault, progress, 3)
     return True
 
 
@@ -481,7 +419,7 @@ This is a template. Create your own skills by:
     return True
 
 
-# ── STEP 06: GitHub Sync ────────────────────────────────────────
+# ── STEP 06: GitHub Sync (auto-connect) ────────────────────────
 
 def step_06_github(vault: Path, progress: dict) -> bool:
     banner(6, "GitHub Sync", "GH")
@@ -494,72 +432,50 @@ def step_06_github(vault: Path, progress: dict) -> bool:
         fail("git not found. Install git first.")
         return False
 
-    git_dir = vault / ".git"
-    if git_dir.exists():
-        ok("Vault is already a git repository.")
-    else:
-        if ask_yn("Initialize git in your vault?"):
-            run(["git", "-C", str(vault), "init"], check=False)
-            ok("Git initialized.")
+    print("  Auto-configuring git and GitHub...\n")
 
-            # Create .gitignore
-            gitignore = vault / ".gitignore"
-            if not gitignore.exists():
-                safe_write(gitignore, """.obsidian/workspace.json
-.obsidian/workspace-mobile.json
-.trash/
-.DS_Store
-*.tmp
-node_modules/
-""")
-                ok(".gitignore created.")
+    # Check current state
+    status = get_status(vault)
+    git_info = status["git"]
 
-            # First commit
+    # Auto-setup git + POS upstream (done by autoconnect in step 03, but ensure it's there)
+    from autoconnect import setup_git
+    create_repo = False
+
+    if has_command("gh") and not git_info.get("vault_remote"):
+        create_repo = ask_yn("Create a private GitHub repo for your vault?")
+
+    git_result = setup_git(vault, create_remote=create_repo)
+
+    # Report
+    if git_result.get("initialized"):
+        ok("Git repository ready.")
+    if git_result.get("initial_commit"):
+        ok("Initial commit created.")
+    if git_result.get("pos_upstream"):
+        ok(f"POS FOR BEGINNERS linked as 'pos-upstream' remote")
+        print(f"    {DIM}Update vault tools: git fetch pos-upstream && git merge pos-upstream/main{RESET}")
+    if git_result.get("vault_remote"):
+        ok(f"Vault repo: {git_result['vault_remote']}")
+    elif not create_repo:
+        print(f"\n  {DIM}No remote repo created. You can add one later:{RESET}")
+        print(f"  {DIM}  gh repo create my-vault --private --source {vault} --push{RESET}")
+
+    # Commit current state
+    if git_result.get("initialized") and not git_result.get("initial_commit"):
+        # Vault existed before — commit new changes from setup
+        r = subprocess.run(
+            ["git", "-C", str(vault), "status", "--porcelain"],
+            capture_output=True, text=True,
+        )
+        if r.stdout.strip():
             run(["git", "-C", str(vault), "add", "-A"], check=False)
-            run(["git", "-C", str(vault), "commit", "-m", "initial vault setup via POS FOR BEGINNERS"], check=False)
-            ok("Initial commit created.")
-        else:
-            warn("Skipping git setup. You can set it up later.")
-            save_progress(vault, progress)
-            return True
+            run(["git", "-C", str(vault), "commit", "-m", f"POS setup update {today()}"], check=False)
+            ok("Changes committed.")
 
-    # GitHub remote
-    has_gh = has_command("gh")
-    remote_check = subprocess.run(
-        ["git", "-C", str(vault), "remote", "get-url", "origin"],
-        capture_output=True, text=True
-    )
-
-    if remote_check.returncode == 0:
-        ok(f"Remote already set: {remote_check.stdout.strip()}")
-    elif has_gh:
-        if ask_yn("Create a private GitHub repo for your vault?"):
-            repo_name = ask("Repo name", "my-vault")
-            if not re.match(r'^[a-zA-Z0-9._-]+$', repo_name) or len(repo_name) > 100:
-                fail("Invalid repo name. Use letters, numbers, hyphens, dots only.")
-                return True
-            result = run(
-                ["gh", "repo", "create", repo_name, "--private", "--source", str(vault), "--push"],
-                check=False
-            )
-            if result.returncode == 0:
-                ok(f"GitHub repo created and pushed: {repo_name}")
-            else:
-                warn("Repo creation failed. You can do it manually later.")
-    else:
-        warn("gh CLI not found. Install: brew install gh && gh auth login")
-        warn("Then add remote manually: git remote add origin https://github.com/<you>/my-vault.git")
-
-    # Agent memory repo
-    if has_gh:
-        print()
-        if ask_yn("Create a separate 'agent-memory' repo for agent tasks?", default=False):
-            result = run(
-                ["gh", "repo", "create", "agent-memory", "--private", "--description", "Agent task memory via GitHub Issues"],
-                check=False
-            )
-            if result.returncode == 0:
-                ok("agent-memory repo created. Use: gh issue create --repo <you>/agent-memory")
+            if git_result.get("vault_remote"):
+                run(["git", "-C", str(vault), "push", "-u", "origin", "main"], check=False)
+                ok("Pushed to remote.")
 
     mark_done(vault, progress, 6)
     return True
