@@ -96,6 +96,21 @@ python3 scripts/doctor.py --vault "/path/to/ObsidianVault"
 python3 scripts/mcp_readiness.py --vault "/path/to/ObsidianVault"
 ```
 
+## 8-Step Roadmap
+
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the full path:
+
+```
+Step 01  Obsidian      → vault + structure + rules
+Step 02  Claude/Codex  → agent + working agreement
+Step 03  MCP servers   → connect platforms one by one
+Step 04  Context       → personal + project context
+Step 05  Skills        → repeatable agent capabilities
+Step 06  GitHub sync   → backup + issues + agent memory
+Step 07  Telegram bot  → quick access interface
+Step 08  POS MVP       → everything works on real work
+```
+
 ## Repo Safety
 
 This repo contains structure, scripts, prompts, and templates only. Do not commit client secrets or raw private source material.

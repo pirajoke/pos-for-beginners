@@ -9,7 +9,9 @@
       "approval_required": false,
       "secret_required": false,
       "env_vars": [],
-      "first_action": "Verify the vault structure and read 60-Rules/Obsidian Rules.md."
+      "mcp_command": "npx -y mcp-obsidian",
+      "first_action": "Verify the vault structure and read 60-Rules/Obsidian Rules.md.",
+      "step": 1
     },
     {
       "id": "notion",
@@ -20,18 +22,87 @@
       "approval_required": true,
       "secret_required": true,
       "env_vars": ["NOTION_TOKEN", "NOTION_DATABASE_ID"],
-      "first_action": "Read one approved page or database only, then save a source note into Obsidian."
+      "mcp_command": "npx -y @notionhq/notion-mcp-server",
+      "first_action": "Read one approved page or database only, then save a source note into Obsidian.",
+      "step": 3
     },
     {
-      "id": "mail",
-      "name": "Mail",
+      "id": "gmail",
+      "name": "Gmail",
       "role": "selected email/thread import",
       "target": "70-Sources/Mail/",
       "default_status": "manual-export-first",
       "approval_required": true,
       "secret_required": true,
       "env_vars": ["GMAIL_CLIENT_ID", "GMAIL_CLIENT_SECRET"],
-      "first_action": "Import one explicitly approved email thread; never scrape the mailbox broadly."
+      "mcp_command": "Claude.ai built-in Gmail MCP",
+      "first_action": "Import one explicitly approved email thread; never scrape the mailbox broadly.",
+      "step": 3
+    },
+    {
+      "id": "google-calendar",
+      "name": "Google Calendar",
+      "role": "read events and schedules",
+      "target": "40-Meetings/",
+      "default_status": "planned",
+      "approval_required": true,
+      "secret_required": true,
+      "env_vars": [],
+      "mcp_command": "Claude.ai built-in Google Calendar MCP",
+      "first_action": "Read today's calendar events only.",
+      "step": 3
+    },
+    {
+      "id": "linear",
+      "name": "Linear",
+      "role": "task and issue tracker",
+      "target": "10-Projects/",
+      "default_status": "planned",
+      "approval_required": true,
+      "secret_required": true,
+      "env_vars": ["LINEAR_API_KEY"],
+      "mcp_command": "Linear MCP (built-in or https://mcp.linear.app/mcp)",
+      "first_action": "List team issues. Do not create or modify issues without approval.",
+      "step": 3
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "role": "repos, issues, PRs, agent memory",
+      "target": "10-Projects/",
+      "default_status": "ready-if-gh-installed",
+      "approval_required": false,
+      "secret_required": false,
+      "env_vars": [],
+      "mcp_command": "gh CLI (no MCP needed)",
+      "first_action": "List repos. Use gh issue for agent memory.",
+      "step": 6
+    },
+    {
+      "id": "exa",
+      "name": "Exa",
+      "role": "AI-native web search and research",
+      "target": "30-Resources/",
+      "default_status": "planned",
+      "approval_required": false,
+      "secret_required": true,
+      "env_vars": ["EXA_API_KEY"],
+      "mcp_command": "Exa MCP or Claude.ai built-in",
+      "first_action": "Run one search query and save results as a source note.",
+      "step": 3
+    },
+    {
+      "id": "telegram",
+      "name": "Telegram",
+      "role": "bot interface for quick access and capture",
+      "target": "00-Inbox/ or 70-Sources/Manual/",
+      "default_status": "planned",
+      "approval_required": true,
+      "secret_required": true,
+      "env_vars": ["TELEGRAM_BOT_TOKEN"],
+      "mcp_command": "Custom bot script or n8n workflow",
+      "first_action": "Create bot via @BotFather. Send one test message.",
+      "step": 7
     },
     {
       "id": "granola",
@@ -42,7 +113,9 @@
       "approval_required": true,
       "secret_required": false,
       "env_vars": [],
-      "first_action": "Copy or export one approved transcript into 70-Sources/Granola/."
+      "mcp_command": "Manual export only",
+      "first_action": "Copy or export one approved transcript into 70-Sources/Granola/.",
+      "step": 3
     },
     {
       "id": "crisp",
@@ -53,7 +126,9 @@
       "approval_required": true,
       "secret_required": true,
       "env_vars": ["CRISP_IDENTIFIER", "CRISP_KEY", "CRISP_WEBSITE_ID"],
-      "first_action": "Read one approved conversation export only, then save it as a source note."
+      "mcp_command": "Manual export or Crisp API",
+      "first_action": "Read one approved conversation export only, then save it as a source note.",
+      "step": 3
     }
   ]
 }

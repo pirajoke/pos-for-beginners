@@ -20,7 +20,7 @@ class StructureTests(unittest.TestCase):
     def test_required_connectors_present(self) -> None:
         config = json.loads((ROOT / "config" / "connectors.json").read_text(encoding="utf-8"))
         names = {connector["name"] for connector in config["connectors"]}
-        self.assertTrue({"Obsidian", "Notion", "Mail", "Granola", "Crisp"}.issubset(names))
+        self.assertTrue({"Obsidian", "Notion", "Gmail", "Granola", "Crisp"}.issubset(names))
 
     def test_prompts_keep_one_question_rule(self) -> None:
         prompt = (ROOT / "prompts" / "OBSIDIAN_STRUCTURE_INTERVIEW.md").read_text(encoding="utf-8")

@@ -3,21 +3,51 @@
     "obsidian": {
       "command": "npx",
       "args": ["-y", "mcp-obsidian"],
+      "env": {
+        "OBSIDIAN_VAULT_PATH": "/path/to/ObsidianVault"
+      },
+      "step": 1,
       "status": "example-only"
     },
     "notion": {
       "command": "npx",
       "args": ["-y", "@notionhq/notion-mcp-server"],
       "env": {
-        "NOTION_TOKEN": "set-outside-vault"
+        "NOTION_TOKEN": "ntn_..."
       },
+      "step": 3,
       "status": "example-only"
     },
-    "mail": {
-      "command": "manual-or-approved-mcp",
-      "args": [],
+    "linear": {
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp",
+      "step": 3,
+      "status": "example-only"
+    },
+    "exa": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/exa-mcp-server"],
+      "env": {
+        "EXA_API_KEY": "exa-..."
+      },
+      "step": 3,
+      "status": "example-only"
+    },
+    "github": {
+      "note": "Use gh CLI directly, no MCP needed. Install: brew install gh && gh auth login",
+      "step": 6,
+      "status": "cli-only"
+    },
+    "gmail": {
+      "note": "Use Claude.ai built-in Gmail MCP or manual export. No local MCP server needed.",
+      "step": 3,
+      "status": "manual-export-first"
+    },
+    "google-calendar": {
+      "note": "Use Claude.ai built-in Google Calendar MCP. No local MCP server needed.",
+      "step": 3,
       "status": "manual-export-first"
     }
   },
-  "rule": "Do not copy this file into a client config with real secrets. Secrets stay outside the vault and outside git."
+  "rule": "Do not copy this file into a client config with real secrets. Secrets stay outside the vault and outside git. Connect one server at a time. Test with one read-only operation before bulk use."
 }

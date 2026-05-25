@@ -22,14 +22,16 @@ def connector_registry(vault: Path) -> str:
     rows = []
     for connector in load_connectors():
         env_vars = ", ".join(connector.get("env_vars", [])) if connector.get("env_vars") else "none"
+        mcp_cmd = connector.get("mcp_command", "none")
+        step = connector.get("step", "?")
         rows.append(
-            "| {name} | {role} | {status} | {target} | {approval} | {secrets} | {env} |".format(
+            "| {name} | {role} | {status} | {target} | {mcp} | {step} | {env} |".format(
                 name=connector["name"],
                 role=connector["role"],
                 status=connector["default_status"],
                 target=connector["target"],
-                approval="yes" if connector["approval_required"] else "no",
-                secrets="yes" if connector["secret_required"] else "no",
+                mcp=mcp_cmd,
+                step=f"Step {step}",
                 env=env_vars,
             )
         )
@@ -37,9 +39,11 @@ def connector_registry(vault: Path) -> str:
 
 This note tracks which systems can be connected, where their context should land, and what the client must approve.
 
+See `docs/ROADMAP.md` for the full 8-step setup guide.
+
 ## Registry
 
-| System | Role | Current status | Vault target | Approval required | Secret required | Env vars |
+| System | Role | Status | Vault target | MCP / Tool | Step | Env vars |
 |---|---|---|---|---|---|---|
 {chr(10).join(rows)}
 
@@ -59,11 +63,14 @@ def mcp_plan() -> str:
     sections = []
     for connector in load_connectors():
         env_vars = connector.get("env_vars", [])
+        mcp_cmd = connector.get("mcp_command", "none")
+        step = connector.get("step", "?")
         sections.append(
-            f"""## {connector["name"]}
+            f"""## {connector["name"]} (Step {step})
 
 - Purpose: {connector["role"]}.
 - First safe action: {connector["first_action"]}
+- MCP / tool: `{mcp_cmd}`.
 - Required approval: {'yes' if connector["approval_required"] else 'no'}.
 - Required secrets/env vars: {', '.join(env_vars) if env_vars else 'none'}.
 - Context target: `{connector["target"]}`.

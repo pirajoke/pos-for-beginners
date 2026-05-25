@@ -557,33 +557,35 @@ Rules:
 FIRST_WEEK_CHECKLIST = f"""{frontmatter()}
 # First Week Checklist
 
-## Day 1 - Structure
+See `docs/ROADMAP.md` for the full 8-step path: Obsidian → Claude/Codex → MCP → Context → Skills → GitHub → Telegram → POS MVP.
+
+## Day 1 - Structure (Step 01: Obsidian)
 
 - [ ] Open `START HERE - POS FOR BEGINNERS Setup.md`.
 - [ ] Run the Obsidian structure interview.
 - [ ] Save answers in `90-Operations/Setup/Setup Answers.md`.
 - [ ] Review `60-Rules/Obsidian Rules.md`.
 
-## Day 2 - First Notes
+## Day 2 - First Notes (Step 01: Obsidian)
 
 - [ ] Create one project note in `10-Projects/`.
 - [ ] Create one area note in `20-Areas/`.
 - [ ] Create one meeting note in `40-Meetings/`.
 - [ ] Move loose notes out of `00-Inbox`.
 
-## Day 3 - Agent Context
+## Day 3 - Agent Context (Step 02: Claude/Codex)
 
 - [ ] Run the Agent Working Agreement interview.
 - [ ] Update `60-Rules/Agent Working Agreement.md`.
 - [ ] Mark unknowns as `[ASK ME]`.
 
-## Day 4 - Sources
+## Day 4 - Sources (Step 03: MCP Servers)
 
 - [ ] Decide which source to import first.
 - [ ] Use `90-Operations/Setup/Connect Sources Prompt.md`.
 - [ ] Import one approved source object only.
 
-## Day 5 - Search Test
+## Day 5 - Search Test (Step 04: Context)
 
 - [ ] Search for one project.
 - [ ] Search for one meeting.
@@ -602,6 +604,7 @@ FIRST_WEEK_CHECKLIST = f"""{frontmatter()}
 - [ ] Write what works.
 - [ ] Write what is still confusing.
 - [ ] Decide the next source or project to set up.
+- [ ] Read `docs/ROADMAP.md` — plan Steps 05-08 for week 2+.
 """
 
 
