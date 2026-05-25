@@ -1,0 +1,25 @@
+{
+  "patterns": [
+    {
+      "target": "70-Sources/Notion",
+      "keywords": ["notion", "database", "workspace", "page export"]
+    },
+    {
+      "target": "70-Sources/Mail",
+      "keywords": ["mail", "email", "gmail", "inbox", "thread"]
+    },
+    {
+      "target": "70-Sources/Granola",
+      "keywords": ["granola", "meeting", "transcript", "call notes"]
+    },
+    {
+      "target": "70-Sources/Crisp",
+      "keywords": ["crisp", "support chat", "conversation", "customer chat"]
+    },
+    {
+      "target": "70-Sources/Manual",
+      "keywords": ["notes", "context", "brief", "research", "summary"]
+    }
+  ],
+  "extensions": [".md", ".txt", ".pdf", ".csv", ".json", ".eml"]
+}

@@ -1,0 +1,59 @@
+{
+  "connectors": [
+    {
+      "id": "obsidian",
+      "name": "Obsidian",
+      "role": "source of truth and local note store",
+      "target": "vault root + 70-Sources/Obsidian/",
+      "default_status": "ready-after-install",
+      "approval_required": false,
+      "secret_required": false,
+      "env_vars": [],
+      "first_action": "Verify the vault structure and read 60-Rules/Obsidian Rules.md."
+    },
+    {
+      "id": "notion",
+      "name": "Notion",
+      "role": "selected workspace/page import",
+      "target": "70-Sources/Notion/",
+      "default_status": "planned",
+      "approval_required": true,
+      "secret_required": true,
+      "env_vars": ["NOTION_TOKEN", "NOTION_DATABASE_ID"],
+      "first_action": "Read one approved page or database only, then save a source note into Obsidian."
+    },
+    {
+      "id": "mail",
+      "name": "Mail",
+      "role": "selected email/thread import",
+      "target": "70-Sources/Mail/",
+      "default_status": "manual-export-first",
+      "approval_required": true,
+      "secret_required": true,
+      "env_vars": ["GMAIL_CLIENT_ID", "GMAIL_CLIENT_SECRET"],
+      "first_action": "Import one explicitly approved email thread; never scrape the mailbox broadly."
+    },
+    {
+      "id": "granola",
+      "name": "Granola",
+      "role": "meeting transcript source",
+      "target": "70-Sources/Granola/",
+      "default_status": "manual-export-first",
+      "approval_required": true,
+      "secret_required": false,
+      "env_vars": [],
+      "first_action": "Copy or export one approved transcript into 70-Sources/Granola/."
+    },
+    {
+      "id": "crisp",
+      "name": "Crisp",
+      "role": "support/chat transcript source if the client uses Crisp",
+      "target": "70-Sources/Crisp/",
+      "default_status": "planned-if-used",
+      "approval_required": true,
+      "secret_required": true,
+      "env_vars": ["CRISP_IDENTIFIER", "CRISP_KEY", "CRISP_WEBSITE_ID"],
+      "first_action": "Read one approved conversation export only, then save it as a source note."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "npx",
+      "args": ["-y", "mcp-obsidian"],
+      "status": "example-only"
+    },
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": {
+        "NOTION_TOKEN": "set-outside-vault"
+      },
+      "status": "example-only"
+    },
+    "mail": {
+      "command": "manual-or-approved-mcp",
+      "args": [],
+      "status": "manual-export-first"
+    }
+  },
+  "rule": "Do not copy this file into a client config with real secrets. Secrets stay outside the vault and outside git."
+}
