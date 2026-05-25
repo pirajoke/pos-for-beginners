@@ -48,13 +48,19 @@ def fail(msg: str) -> None:
 
 def ask(prompt: str, default: str = "") -> str:
     suffix = f" [{default}]" if default else ""
-    answer = input(f"  → {prompt}{suffix}: ").strip()
+    try:
+        answer = input(f"  → {prompt}{suffix}: ").strip()
+    except EOFError:
+        return default
     return answer or default
 
 
 def ask_yn(prompt: str, default: bool = True) -> bool:
     hint = "Y/n" if default else "y/N"
-    answer = input(f"  → {prompt} [{hint}]: ").strip().lower()
+    try:
+        answer = input(f"  → {prompt} [{hint}]: ").strip().lower()
+    except EOFError:
+        return default
     if not answer:
         return default
     return answer in ("y", "yes", "да", "д")
@@ -486,7 +492,6 @@ def step_06_github(vault: Path, progress: dict) -> bool:
         ok("Vault is already a git repository.")
     else:
         if ask_yn("Initialize git in your vault?"):
-            run(["git", "init"], check=False)
             run(["git", "-C", str(vault), "init"], check=False)
             ok("Git initialized.")
 
