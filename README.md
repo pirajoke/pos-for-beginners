@@ -102,3 +102,9 @@ Step 08  POS MVP       → everything works on real work
 ## Repo Safety
 
 This repo contains structure, scripts, prompts, and templates only. Do not commit client secrets or raw private source material.
+
+## License
+
+The original POS FOR BEGINNERS code, prompts, and templates are available under the [MIT License](LICENSE).
+
+The installer can fetch third-party skill libraries into a user's vault. Those projects retain their own licenses and are not relicensed by this repository.
